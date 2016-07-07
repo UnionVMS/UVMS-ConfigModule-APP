@@ -65,9 +65,6 @@ public class MessageProducerBean implements MessageProducer {
             message.setText(text);
 
             switch (queue) {
-                case INTERNAL:
-                    getProducer(session, localDbQueue).send(message);
-                    break;
                 case AUDIT:
                     getProducer(session, auditQueue).send(message);
                     break;
