@@ -35,9 +35,6 @@ public class MessageProducerBean implements MessageProducer {
 
     final static Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);
 
-    @Resource(mappedName = MessageConstants.QUEUE_DATASOURCE_INTERNAL)
-    private Queue localDbQueue;
-
     @Resource(mappedName = MessageConstants.AUDIT_MODULE_QUEUE)
     private Queue auditQueue;
 
