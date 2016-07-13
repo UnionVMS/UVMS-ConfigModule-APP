@@ -48,12 +48,6 @@
             <version>${audit.model.version}</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>config-dbaccess-api</artifactId>
-            <version>${config.model.version}</version>
-            <type>jar</type>
-        </dependency>
     </dependencies>
 
     <build>
