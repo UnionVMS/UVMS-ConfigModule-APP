@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.config.message.producer.bean;
 
 import javax.annotation.Resource;
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Observes;
@@ -29,8 +28,9 @@ import eu.europa.ec.fisheries.uvms.config.message.exception.MessageException;
 import eu.europa.ec.fisheries.uvms.config.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
+import javax.ejb.Singleton;
 
-@Stateless
+@Singleton
 public class MessageProducerBean implements MessageProducer {
 
     final static Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);

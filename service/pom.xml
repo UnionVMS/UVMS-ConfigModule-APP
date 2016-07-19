@@ -19,6 +19,11 @@
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
         <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+        
+        <!-- persistence.xml CONFIGS -->
+        <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+        <jta.data-source>java:jboss/datasources/uvms_asset</jta.data-source>
+        <jta.platform>org.hibernate.service.jta.platform.internal.JBossStandAloneJtaPlatform</jta.platform>
     </properties>
 
     <profiles>
@@ -26,6 +31,13 @@
             <id>oracle</id>
             <properties>
                 <hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect>
+            </properties>
+        </profile>
+        <profile>
+            <id>weblogic</id>
+            <properties>
+                <jta.data-source>jdbc.uvms_movement</jta.data-source>
+                <jta.platform>org.hibernate.service.jta.platform.internal.WeblogicJtaPlatform</jta.platform>
             </properties>
         </profile>
     </profiles>
