@@ -21,5 +21,4 @@
 		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/rest/*</url-pattern>
 	</filter-mapping>
-
 </web-app>
