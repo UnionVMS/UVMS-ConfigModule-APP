@@ -18,9 +18,9 @@
         <logback.version>1.1.2</logback.version>
         <logback.core.version>1.1.2</logback.core.version>
 
-        <usm4uvms.version>2.1.0-SNAPSHOT</usm4uvms.version>
-        <audit.model.version>2.1.0-SNAPSHOT</audit.model.version>
-        <config.model.version>2.1.0-SNAPSHOT</config.model.version>
+        <usm4uvms.version>2.1.0</usm4uvms.version>
+        <audit.model.version>2.1.0</audit.model.version>
+        <config.model.version>2.1.0</config.model.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
