@@ -1,4 +1,4 @@
-# ConfigModule
+# ConfigModule - Main module
 
 See https://focusfish.atlassian.net/wiki/display/UVMS/Config for Documentation
 
