@@ -83,7 +83,7 @@ It should provide the module name and a list of strings of all parameter keys re
    Remove the Parameter entity, as well as the ParameterService interface and bean. Switch to the ParameterService included in uvms-config where needed.
 
 ### Setup the context and database
-In persistence.xml, make sure that the name of the persistence unit is "modulePU", and that the Parameter entity is specified in a <class>-tag.
+In persistence.xml, make sure that the name of the persistence unit is module name, and that the Parameter entity is specified in a <class>-tag.
 ```xml
     <class>eu.europa.ec.fisheries.uvms.config.service.entity.Parameter</class>
 ```
