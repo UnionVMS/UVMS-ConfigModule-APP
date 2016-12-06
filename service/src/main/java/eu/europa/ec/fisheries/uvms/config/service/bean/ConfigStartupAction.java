@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.config.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Singleton
 @Startup
 @DependsOn(value = { "MessageProducerBean" })
@@ -35,11 +38,17 @@ public class ConfigStartupAction {
 
     @PostConstruct
     protected void sendConfigDeployedMessage() {
-        try {
-            String message = ModuleRequestMapper.toConfigDeployedMessage();
-            producer.sendConfigDeployedMessage(message);
-        } catch (Exception e) {
-            LOG.error("[ Error when sending config deployed message on topic. ] {}", e.getMessage());
-        }
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String message = ModuleRequestMapper.toConfigDeployedMessage();
+                    producer.sendConfigDeployedMessage(message);
+                } catch (Exception e) {
+                    LOG.error("[ Error when sending config deployed message on topic. ] {}", e.getMessage());
+                }
+            }
+        });
     }
 }
