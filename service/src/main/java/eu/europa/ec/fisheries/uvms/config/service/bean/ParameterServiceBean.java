@@ -33,7 +33,7 @@ public class ParameterServiceBean implements ParameterService {
      */
     final static Logger LOG = LoggerFactory.getLogger(ParameterServiceBean.class);
 
-    @PersistenceContext(unitName = "internalPU")
+    @PersistenceContext(unitName = "config")
     EntityManager em;
 
     @Override

@@ -11,13 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.message.producer.bean;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Observes;
 import javax.jms.*;
 
+import eu.europa.ec.fisheries.uvms.message.JMSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,31 +30,63 @@ import eu.europa.ec.fisheries.uvms.config.message.exception.MessageException;
 import eu.europa.ec.fisheries.uvms.config.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
+import javax.ejb.Singleton;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
-@Stateless
+@Singleton
 public class MessageProducerBean implements MessageProducer {
 
     final static Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);
 
-    @Resource(mappedName = MessageConstants.QUEUE_DATASOURCE_INTERNAL)
-    private Queue localDbQueue;
-
-    @Resource(mappedName = MessageConstants.AUDIT_MODULE_QUEUE)
     private Queue auditQueue;
-
-    @Resource(mappedName = MessageConstants.COMPONENT_RESPONSE_QUEUE)
     private Queue responseQueue;
 
-    @Resource(lookup = MessageConstants.CONNECTION_FACTORY)
-    private ConnectionFactory connectionFactory;
-
-    @Resource(mappedName = MessageConstants.CONFIG_STATUS_TOPIC)
     private Topic configTopic;
+
+    private ConnectionFactory connectionFactory;
 
     private Connection connection = null;
     private Session session = null;
 
-    private static final int TIME_TO_LIVE = 1*60*1000;
+    @PostConstruct
+    public void init() {
+        InitialContext ctx;
+        try {
+            ctx = new InitialContext();
+        } catch (Exception e) {
+            LOG.error("Failed to get InitialContext",e);
+            throw new RuntimeException(e);
+        }
+        lookupConnectionFactory(ctx);
+        responseQueue = JMSUtils.lookupQueue(ctx, MessageConstants.COMPONENT_RESPONSE_QUEUE);
+        auditQueue = JMSUtils.lookupQueue(ctx, MessageConstants.AUDIT_MODULE_QUEUE);
+        configTopic = JMSUtils.lookupTopic(ctx, MessageConstants.CONFIG_STATUS_TOPIC);
+    }
+
+    private void lookupConnectionFactory(InitialContext ctx) {
+        LOG.debug("Open connection to JMS broker");
+        try {
+            connectionFactory = (QueueConnectionFactory) ctx.lookup(MessageConstants.CONNECTION_FACTORY);
+        } catch (NamingException ne) {
+            //if we did not find the connection factory we might need to add java:/ at the start
+            LOG.debug("Connection Factory lookup failed for " + MessageConstants.CONNECTION_FACTORY);
+            String wfName = "java:/" + MessageConstants.CONNECTION_FACTORY;
+            try {
+                LOG.debug("trying " + wfName);
+                connectionFactory = (QueueConnectionFactory) ctx.lookup(wfName);
+            } catch (Exception e) {
+                LOG.error("Connection Factory lookup failed for both " + MessageConstants.CONNECTION_FACTORY  + " and " + wfName);
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            connection = connectionFactory.createConnection();
+            connection.start();
+        } catch (JMSException ex) {
+            LOG.error("Error when open connection to JMS broker");
+        }
+    }
     
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -65,9 +98,6 @@ public class MessageProducerBean implements MessageProducer {
             message.setText(text);
 
             switch (queue) {
-                case INTERNAL:
-                    getProducer(session, localDbQueue).send(message);
-                    break;
                 case AUDIT:
                     getProducer(session, auditQueue).send(message);
                     break;
