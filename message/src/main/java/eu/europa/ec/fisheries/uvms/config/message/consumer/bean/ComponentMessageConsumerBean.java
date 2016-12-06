@@ -45,7 +45,7 @@ public class ComponentMessageConsumerBean implements MessageConsumer {
     private void init() {
         LOG.debug("Open connection to JMS broker");
         InitialContext ctx;
-        try {dock
+        try {
             ctx = new InitialContext();
         } catch (Exception e) {
             LOG.error("Failed to get InitialContext",e);
