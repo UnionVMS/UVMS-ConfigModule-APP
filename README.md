@@ -6,3 +6,4 @@ See https://focusfish.atlassian.net/wiki/display/UVMS/Config for Documentation
 
 * https://github.com/UnionVMS/UVMS-ConfigModule-DB
 * https://github.com/UnionVMS/UVMS-ConfigModule-MODEL
+* https://github.com/UnionVMS/UVMS-UVMSConfigLibrary
