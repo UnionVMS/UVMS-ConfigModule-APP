@@ -18,10 +18,10 @@
         <logback.version>1.1.2</logback.version>
         <logback.core.version>1.1.2</logback.core.version>
 
-        <usm4uvms.version>3.0.0</usm4uvms.version>
-        <audit.model.version>3.0.0</audit.model.version>
-        <config.model.version>3.0.0</config.model.version>
-        <uvms.common.version>2.0.14</uvms.common.version>
+        <usm4uvms.version>3.0.4</usm4uvms.version>
+        <audit.model.version>3.0.4</audit.model.version>
+        <config.model.version>3.0.4</config.model.version>
+        <uvms.common.version>2.0.17</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
