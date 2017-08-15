@@ -31,6 +31,16 @@
 
         <project.scm.id>github</project.scm.id>
     </properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>fish.focus.uvms.maven</groupId>
+				<artifactId>uvms-pom-monitoring-deps</artifactId>
+				<version>1.8</version>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -76,7 +86,7 @@
         </repository>
     </repositories>
 
-    <distributionManagement> 
+    <distributionManagement>
         <repository>
             <id>focus-releases</id>
             <name>UnionVms Repository</name>

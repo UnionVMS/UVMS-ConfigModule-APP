@@ -41,7 +41,6 @@
                     </modules>
                     <skinnyWars>true</skinnyWars>
                     <defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
-                    <version>7</version>
                 </configuration>
             </plugin>
         </plugins>
@@ -61,18 +60,18 @@
             <type>ejb</type>
         </dependency>
         <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.config</groupId>  
+            <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
             <artifactId>config-model</artifactId>
             <version>${config.model.version}</version>
             <type>jar</type>
-        </dependency> 
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>config-rest</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>
         </dependency>
-        
+
         <!-- Skinny wars dependency -->
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
@@ -133,9 +132,9 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>  
+                    </plugin>
                 </plugins>
-            </build>      
+            </build>
         </profile>
     </profiles>
 

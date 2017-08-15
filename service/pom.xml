@@ -11,16 +11,21 @@
         <artifactId>config</artifactId>
         <version>3.0.8-SNAPSHOT</version>
     </parent>
-    
+
     <!-- PROPERTIES USED FOR LOGBACK -->
     <properties>
-        <application.name>${project.parent.artifactId}</application.name> 
+        <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}.log</application.logfile>
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
     </properties>
 
     <dependencies>
+    	<dependency>
+			<groupId>fish.focus.uvms.maven</groupId>
+			<artifactId>uvms-pom-monitoring-deps</artifactId>
+			<type>pom</type>
+		</dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
             <artifactId>config-model</artifactId>
