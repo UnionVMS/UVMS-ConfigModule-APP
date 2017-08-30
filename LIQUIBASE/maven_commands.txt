@@ -1,0 +1,19 @@
+## Check status
+mvn liquibase:status -P postgres
+
+## Update database
+mvn liquibase:update -P postgres
+
+## Rollback the database to a specified tag
+mvn liquibase:rollback -P postgres -Dliquibase.rollbackTag=version_0.1
+## Rollback the database a specific number of changes
+mvn liquibase:rollback -P postgres -Dliquibase.rollbackCount=1
+
+
+Regarding contexts:
+- At the moment we use one context ("test" - for test data).
+In order to run all non-context changesets AND selected:
+- mvn liquibase:update -P postgres -Dliquibase.contexts=test
+
+In order to only run all non-context changesets, run with a context that doesn't exist:
+- mvn liquibase:update -P postgres -Dliquibase.contexts=blurk

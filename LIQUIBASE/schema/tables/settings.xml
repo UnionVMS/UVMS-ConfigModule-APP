@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+		xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+	
+	<changeSet author="marche" id="settings-01">
+		<createTable tableName="settings" remarks="Settings stored as key/value pairs.">
+			<column name="setting_id" type="bigint">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="setting_pk" />
+			</column>
+			<column name="setting_key" type="varchar(500)" remarks="Setting key.">
+				<constraints nullable="false" />
+			</column>
+			<column name="setting_value" type="varchar(4000)" remarks="Setting value.">
+				<constraints nullable="false" />
+			</column>
+			<column name="setting_module_id" type="bigint" remarks="Module of setting. Global if null." />
+			<column name="global" type="boolean" remarks="True if the setting is global." />
+		</createTable>
+		<rollback>
+			<dropTable tableName="settings" cascadeConstraints="true" />
+		</rollback>
+	</changeSet>
+
+	<changeSet author="marche" id="settings_module_fk-01">
+		<addForeignKeyConstraint baseColumnNames="setting_module_id"
+				baseTableName="settings"
+				constraintName="fk_settings_module"
+				referencedColumnNames="module_id"
+				referencedTableName="modules" />
+	</changeSet>
+
+	<changeSet author="marche" id="Add description column.">
+		<addColumn tableName="settings">
+			<column name="setting_description" type="varchar(500)" remarks="Setting description." defaultValue="-">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="marche" id="addUniqueConstraint-module-key">
+		<addUniqueConstraint tableName="settings" columnNames="setting_key, setting_module_id"/>
+	</changeSet>
+
+	<changeSet author="marche" id="last modified column">
+		<addColumn tableName="settings">
+			<column name="setting_last_modified" type="DATETIME" remarks="Date and time of last modification."/>
+		</addColumn>
+	</changeSet>
+
+	
+	<changeSet author="nhily" id="Add updated by column.">
+		<addColumn tableName="settings">
+			<column name="updated_by" type="varchar(60)" remarks="Setting updated by user.">
+			</column>
+		</addColumn>
+	</changeSet>
+	
+	<changeSet author="nhily" id="Add seq for module id">
+		<createSequence sequenceName="HIBERNATE_SEQUENCE" startValue="50"/>
+		<rollback>
+			<dropSequence schemaName="config" sequenceName="HIBERNATE_SEQUENCE"/>
+		</rollback>
+	</changeSet>
+	
+
+</databaseChangeLog>

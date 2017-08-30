@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet author="marche" id="globalSettings-01">
+        <insert tableName="settings">
+			<column name="setting_id" value="1"/>
+            <column name="setting_key" value="measurementSystem"/>
+            <column name="setting_value" value="metric"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="Choise of metric system, typically metric or imperial."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+			<column name="updated_by" value="UVMS"/>
+        </insert>
+		<insert tableName="settings">
+			<column name="setting_id" value="2"/>
+            <column name="setting_key" value="coordinateFormat"/>
+            <column name="setting_value" value="degreesMinutesSeconds"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="Coordinate system."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+			<column name="updated_by" value="UVMS"/>
+        </insert>
+		
+        <insert tableName="settings">
+		<column name="setting_id" value="3"/>
+            <column name="setting_key" value="dateTimeFormat"/>
+            <column name="setting_value" value="YYYY-MM-DD HH:mm:ss"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="Choice of datetime format."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+			<column name="updated_by" value="UVMS"/>
+        </insert>
+        <insert tableName="settings">
+		<column name="setting_id" value="4"/>
+            <column name="setting_key" value="defaultHomePage"/>
+            <column name="setting_value" value="reporting"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="Default home page."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+			<column name="updated_by" value="UVMS"/>
+        </insert>
+        <insert tableName="settings">
+		<column name="setting_id" value="5"/>
+            <column name="setting_key" value="availableLanguages"/>
+            <column name="setting_value" value="en-gb"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="List of available language codes, comma-separated."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+			<column name="updated_by" value="UVMS"/>
+        </insert>
+        <insert tableName="settings">
+		<column name="setting_id" value="6"/>
+            <column name="setting_key" value="distanceUnit"/>
+            <column name="setting_value" value="nm"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="Unit used for distances."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+			<column name="updated_by" value="UVMS"/>
+        </insert>
+        <insert tableName="settings">
+		<column name="setting_id" value="7"/>
+            <column name="setting_key" value="speedUnit"/>
+            <column name="setting_value" value="kts"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="Unit used for speed."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+			<column name="updated_by" value="UVMS"/>
+        </insert>
+        <insert tableName="settings">
+		<column name="setting_id" value="8"/>
+            <column name="setting_key" value="maxSpeed"/>
+            <column name="setting_value" value="15"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="Maximum allowed speed, measured in nautical miles."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+			<column name="updated_by" value="UVMS"/>
+        </insert>
+        <insert tableName="settings">
+		<column name="setting_id" value="9"/>
+            <column name="setting_key" value="timezone"/>
+            <column name="setting_value" value="0"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="Global timezone (offset from UTC in minutes)."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+			<column name="updated_by" value="UVMS"/>
+        </insert>
+        <rollback>
+            <delete tableName="settings">
+                <where>
+                    global = true and setting_key in ('measurementSystem', 'coordinateFormat', 'dateTimeFormat', 'dashBoard', 'availableLanguages')
+                </where>
+            </delete>
+        </rollback>
+
+    </changeSet>
+
+    <changeSet author="stihft" id="add_global_setting_flux_local_nation_code">
+        <insert tableName="settings">
+            <column name="setting_id" value="10"/>
+            <column name="setting_key" value="flux_local_nation_code"/>
+            <column name="setting_value" value="TODO_UPDATE__FLUX_LOCAL_NATION_CODE"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="The nation code of the country where this instance of UnionVMS is deployed."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+        <rollback>
+            <delete tableName="settings">
+                <where>
+                    global = true and setting_key in ('flux_local_nation_code')
+                </where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="stihft" id="add_global_setting_currency">
+        <insert tableName="settings">
+            <column name="setting_id" value="11"/>
+            <column name="setting_key" value="currency"/>
+            <column name="setting_value" value="EUR"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="The currency of the country where the software is deployed. In ISO 4217 format."/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+        <rollback>
+            <delete tableName="settings">
+                <where>
+                    global = true and setting_key in ('currency')
+                </where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

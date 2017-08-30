@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+		xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+	<changeSet author="marche" id="modules-01">
+		<createTable tableName="modules" remarks="Know modules table.">
+			<column name="module_id" type="bigint">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="modules_pk" />
+			</column>
+			<column name="module_name" type="varchar(500)" remarks="Module name.">
+				<constraints nullable="false" />
+			</column>
+			<column name="jms_queue" type="varchar(500)" remarks="Last known JMS queue for this module."/>
+		</createTable>
+        
+		<rollback>
+			<dropTable tableName="modules" cascadeConstraints="true" />
+		</rollback>
+	</changeSet>
+
+	<changeSet author="marche" id="drop jms_queue column">
+		<dropColumn tableName="modules" columnName="jms_queue"/>
+	</changeSet>
+
+	<changeSet author="osdjup" id="set module_name unique">
+		<addUniqueConstraint columnNames="module_name" tableName="modules" />
+	</changeSet>
+	
+
+</databaseChangeLog>
+	

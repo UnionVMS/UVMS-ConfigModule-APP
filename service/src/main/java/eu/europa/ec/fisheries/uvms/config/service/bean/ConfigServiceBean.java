@@ -49,7 +49,8 @@ public class ConfigServiceBean implements ConfigService {
 
     @Inject
     ModuleAvailabilityBean moduleAvailability;
-    @EJB(lookup = "java:global/config-dbaccess-module/config-dbaccess-domain/ConfigDomainModelBean!eu.europa.ec.fisheries.uvms.config.ConfigDomainModel")
+    
+    @EJB
     ConfigDomainModel configModel;
 
     @Override
