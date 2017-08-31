@@ -8,7 +8,10 @@
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.generate_statistics" value="true"/>
         </properties>
+        <shared-cache-mode>ALL</shared-cache-mode>
     </persistence-unit>
     <persistence-unit name="configOraclePU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
@@ -16,6 +19,9 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.generate_statistics" value="true"/>
         </properties>
+        <shared-cache-mode>ALL</shared-cache-mode>
     </persistence-unit>
 </persistence>

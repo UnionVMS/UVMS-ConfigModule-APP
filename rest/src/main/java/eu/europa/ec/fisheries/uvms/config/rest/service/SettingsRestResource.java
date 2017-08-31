@@ -67,13 +67,13 @@ public class SettingsRestResource {
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings")
     public ResponseDto create(SettingsCreateQuery query) {
-        LOG.info("Create setting invoked in rest layer.");
+        LOG.info("Create setting invoked in rest layer:{}",query);
         try {
             SettingType setting = serviceLayer.create(query.getSetting(), query.getModuleName(), request.getRemoteUser());
             return new ResponseDto(setting, ResponseCode.OK);
         }
         catch (ServiceException | NullPointerException e) {
-            LOG.error("[ Error when creating setting. ] {} ", e.getMessage());
+            LOG.error("[ Error when creating setting:{} ] {} ",query, e.getMessage());
             return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
         }
     }
@@ -88,12 +88,12 @@ public class SettingsRestResource {
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings/{id}")
     public ResponseDto getById(@PathParam(value = "id") final Long settingId) {
-        LOG.info("Get setting by ID invoked in rest layer.");
+        LOG.info("Get setting by ID invoked in rest layer: {}",settingId);
         try {
             return new ResponseDto(serviceLayer.getById(settingId), ResponseCode.OK);
         }
         catch (ServiceException | NullPointerException e) {
-            LOG.error("[ Error when getting setting by ID. ] {} ", e.getMessage());
+            LOG.error("[ Error when getting setting by ID. {}] {} ",settingId, e.getMessage());
             return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
         }
     }
@@ -111,7 +111,7 @@ public class SettingsRestResource {
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings")
     public ResponseDto getByModuleName(@QueryParam("moduleName") String moduleName) {
-        LOG.info("Get settings invoked in rest layer.");
+        LOG.info("Get settings invoked in rest layer:{}",moduleName);
         try {
             List<SettingType> settings = serviceLayer.getList(moduleName);
             if (settings == null) {
@@ -121,7 +121,7 @@ public class SettingsRestResource {
             return new ResponseDto(settings, ResponseCode.OK);
         }
         catch (ServiceException | NullPointerException ex) {
-            LOG.error("[ Error when getting settings list. ] {} ", ex);
+            LOG.error("[ Error when getting settings list. {} ] {} ",moduleName, ex);
             return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
         }
     }
@@ -138,12 +138,12 @@ public class SettingsRestResource {
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings/{id}")
     public ResponseDto update(@PathParam(value = "id") Long settingId, final SettingType setting) {
-        LOG.info("Update setting invoked in rest layer.");
+        LOG.info("Update setting invoked in rest layer. {} {}",settingId,setting);
         try {
             return new ResponseDto(serviceLayer.update(settingId, setting, request.getRemoteUser()), ResponseCode.OK);
         }
         catch (ServiceException | NullPointerException e) {
-            LOG.error("[ Error when updating setting. ] {} ", e.getMessage());
+            LOG.error("[ Error when updating setting. {} {}] {} ",settingId,setting, e.getMessage());
             return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
         }
     }
@@ -158,12 +158,12 @@ public class SettingsRestResource {
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings/{id}")
     public ResponseDto delete(@PathParam(value = "id") Long id) {
-        LOG.info("Delete setting invoked in rest layer.");
+        LOG.info("Delete setting invoked in rest layer. {}",id);
         try {
             return new ResponseDto(serviceLayer.delete(id, request.getRemoteUser()), ResponseCode.OK);
         }
         catch (ServiceException | NullPointerException e) {
-            LOG.error("[ Error when updating setting. ] {} ", e.getMessage());
+            LOG.error("[ Error when updating setting. {}] {} ",id, e.getMessage());
             return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
         }
     }

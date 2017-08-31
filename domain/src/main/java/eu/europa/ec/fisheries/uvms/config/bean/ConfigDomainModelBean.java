@@ -48,12 +48,11 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public SettingType create(SettingType setting, String moduleName, String username) throws ConfigModelException {
-        LOG.info("Create in domain model");
         try {
             return createSetting(setting, getModule(moduleName), username);
         }
         catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when creating setting. ] {}", e.getMessage());
+            LOG.error("[ Error when creating setting. {}] {}",setting, e.getMessage());
             throw new ConfigModelException("Error when creating setting.", e);
         }
     }
@@ -61,7 +60,6 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<SettingType> createAll(List<SettingType> settings, String moduleName, String username) throws ConfigModelException {
-        LOG.info("Create all in domain model");
         Module module = getModule(moduleName);
         List<SettingType> createdSettings = new ArrayList<>();
         for (SettingType setting : settings) {
@@ -70,7 +68,7 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
             }
             catch (DaoException | DaoMappingException e) {
                 // If single setting could not be created, log error and skip to next setting.
-                LOG.error("[ Error when creating single setting. ] {}", e.getMessage());
+                LOG.error("[ Error when creating single setting: {} ] {}",settings, e.getMessage());
             }
         }
 
@@ -79,8 +77,6 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
 
     @Override
     public SettingType get(Long settingId) throws ConfigModelException {
-        LOG.info("Get setting in domain model");
-
         if (settingId == null) {
             LOG.error("[ ID is null, returning Exception. ]");
             throw new InputArgumentException("ID is null", null);
@@ -90,7 +86,7 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
             return mapper.toModel(dao.getSettingById(settingId));
         }
         catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when updating setting. ] {}", e.getMessage());
+            LOG.error("[ Error when updating setting: {} ] {}",settingId, e.getMessage());
             throw new ConfigModelException("[ Error when updating setting. ]", e);
         }
     }
@@ -98,8 +94,6 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public SettingType update(SettingType setting, String username) throws ConfigModelException, InputArgumentException {
-        LOG.info("Update model in domain model");
-
         if (setting == null) {
             LOG.error("[ Model is null, returning Exception ]");
             throw new InputArgumentException("Model is null", null);
@@ -117,7 +111,7 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
             return mapper.toModel(updatedEntity);
         }
         catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when updating setting. ] {}", e.getMessage());
+            LOG.error("[ Error when updating setting: {} ] {}",setting, e.getMessage());
             throw new ConfigModelException("[ Error when updating setting. ]", e);
         }
     }
@@ -134,7 +128,7 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
             return mapper.toModel(dao.deleteSetting(settingId));
         }
         catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when deleting setting. ]" + e.getMessage());
+            LOG.error("[ Error when deleting setting {} ] {}",settingId, e.getMessage());
             throw new ConfigModelException("[ Error when deleting setting. ]", e);
         }
     }
@@ -159,15 +153,13 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
             return mapper.toModel(deletedSetting);
         }
         catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when deleting setting. ] {}", e.getMessage());
+            LOG.error("[ Error when deleting setting. settingKey: {} moduleName: {} ] {}",settingKey,moduleName, e.getMessage());
             throw new ConfigModelException("[ Error when deleting setting. ]");
         }
     }
 
     @Override
     public List<SettingType> getList(String moduleName) throws ConfigModelException, InputArgumentException {
-        LOG.info("Getting list archetype");
-
         if (moduleName == null) {
             LOG.error("[ No module name when getting list. ]");
             throw new InputArgumentException("No module name.");
@@ -185,7 +177,7 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
             return mapper.toModel(settings);
         }
         catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when getting settings list. ]" + e);
+            LOG.error("[ Error when getting settings list:{} ] {}",moduleName, e);
             throw new ConfigModelException("[ Error when getting settings list. ]", e);
         }
     }
@@ -247,7 +239,7 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
             return module;
         }
         catch (DaoException e) {
-            LOG.error("[ Error when getting or creating module. ] {}", e.getMessage());
+            LOG.error("[ Error when getting or creating module:{} ] {}",moduleName, e.getMessage());
             throw new ConfigModelException("[ Could not create settings for module " + moduleName + ". ]");
         }
     }

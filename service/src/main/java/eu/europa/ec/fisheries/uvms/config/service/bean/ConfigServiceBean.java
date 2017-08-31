@@ -55,7 +55,6 @@ public class ConfigServiceBean implements ConfigService {
 
     @Override
     public SettingType create(SettingType setting, String moduleName, String username) throws ServiceException {
-        LOG.info("Create setting invoked in service layer.");
         try {
             SettingType createdSetting = configModel.create(setting, moduleName, username);
             producer.sendConfigDeployedMessage(ModuleRequestMapper.toSetSettingEventRequest(createdSetting));
@@ -63,7 +62,7 @@ public class ConfigServiceBean implements ConfigService {
             return createdSetting;
         }
         catch (ModelMapperException | MessageException | ConfigModelException e) {
-            LOG.error("[ Error when creating setting. ] {}", e.getMessage());
+            LOG.error("[ Error when creating setting. {} ] {}",setting, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
     }
@@ -79,26 +78,24 @@ public class ConfigServiceBean implements ConfigService {
             return createdSettings;
         }
         catch (ConfigModelException e) {
-            LOG.error("[ Error when creating settings. ] {}", e.getMessage());
+            LOG.error("[ Error when creating settings. {} {} {}] {}",settings,moduleName,username, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override
     public SettingType getById(Long settingId) throws ServiceException {
-        LOG.info("Get setting by ID invoked in service layer.");
         try {
             return configModel.get(settingId);
         }
         catch (ConfigModelException e) {
-            LOG.error("[ Error when getting setting by ID. ] {}", e.getMessage());
+            LOG.error("[ Error when getting setting by ID. {}] {}",settingId, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override
     public SettingType update(Long settingId, SettingType setting, String username) throws ServiceException {
-        LOG.info("Update setting invoked in service layer.");
         try {
             SettingType updatedSetting = configModel.update(setting, username);
             producer.sendConfigDeployedMessage(ModuleRequestMapper.toSetSettingEventRequest(updatedSetting));
@@ -106,14 +103,13 @@ public class ConfigServiceBean implements ConfigService {
             return updatedSetting;
         }
         catch (ModelMapperException | MessageException | ConfigModelException e) {
-            LOG.error("[ Error when updating setting. ] {}", e.getMessage());
+            LOG.error("[ Error when updating setting. {} {} {}] {}",settingId,setting,username, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override
     public SettingType delete(Long settingId, String username) throws ServiceException {
-        LOG.info("Delete setting invoked in service layer.");
         try {
             SettingType deletedSetting = configModel.delete(settingId);
             producer.sendConfigDeployedMessage(ModuleRequestMapper.toResetSettingEventRequest(deletedSetting));
@@ -121,14 +117,13 @@ public class ConfigServiceBean implements ConfigService {
             return deletedSetting;
         }
         catch (ModelMapperException | MessageException | ConfigModelException ex) {
-            LOG.error("[ Error when deleting setting. ] {}", ex.getMessage());
+            LOG.error("[ Error when deleting setting. {} {} ] {}",settingId,username, ex.getMessage());
             throw new ServiceException(ex.getMessage());
         }
     }
 
     @Override
     public SettingType delete(String settingKey, String moduleName, String username) throws ServiceException {
-        LOG.info("Delete setting invoked in service layer.");
         try {
             SettingType deletedSetting = configModel.delete(settingKey, moduleName);
             producer.sendConfigDeployedMessage(ModuleRequestMapper.toResetSettingEventRequest(deletedSetting));
@@ -136,14 +131,13 @@ public class ConfigServiceBean implements ConfigService {
             return deletedSetting;
         }
         catch (ModelMapperException | MessageException | ConfigModelException ex) {
-            LOG.error("[ Error when deleting setting. ] {}", ex.getMessage());
+            LOG.error("[ Error when deleting setting. {} {} {} ] {}",settingKey,moduleName,username, ex.getMessage());
             throw new ServiceException(ex.getMessage());
         }
     }
     
     @Override
     public List<SettingType> getList(String moduleName) throws ServiceException {
-        LOG.info("List invoked in service layer");
         try {
             return configModel.getList(moduleName);
         }
@@ -210,7 +204,7 @@ public class ConfigServiceBean implements ConfigService {
             producer.sendDataSourceMessage(message, DataSourceQueue.AUDIT);
         }
         catch (AuditModelMarshallException | MessageException e) {
-            LOG.error("[ Error when sending message to Audit. ] {}", e.getMessage());
+            LOG.error("[ Error when sending message to Audit. {} {} {} ] {}",operation,setting,userName, e.getMessage());
         }
     }
 
