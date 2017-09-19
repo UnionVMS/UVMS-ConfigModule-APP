@@ -1,0 +1,370 @@
+<definitions name="ConfigDataSource"
+			targetNamespace="urn:source.config.schema.fisheries.ec.europa.eu:v1"
+			xmlns:source="urn:source.config.schema.fisheries.ec.europa.eu:v1"
+			xmlns:types="urn:types.config.schema.fisheries.ec.europa.eu:v1"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+			xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+	<types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:source.config.schema.fisheries.ec.europa.eu:v1">
+
+			<xsd:import namespace="urn:types.config.schema.fisheries.ec.europa.eu:v1" schemaLocation="Element.xsd"/>
+
+			<xsd:simpleType name="ConfigDataSourceMethod">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="CREATE"/>
+					<xsd:enumeration value="CREATE_ALL"/>
+					<xsd:enumeration value="GET"/>
+					<xsd:enumeration value="UPDATE"/>
+					<xsd:enumeration value="DELETE"/>
+					<xsd:enumeration value="LIST"/>
+					<xsd:enumeration value="GET_CATALOG"/>
+					<xsd:enumeration value="GET_GLOBALS"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:complexType name="ConfigDataSourceBaseRequest" abstract="true">
+				<xsd:sequence>
+					<xsd:element name="method" type="source:ConfigDataSourceMethod"/>
+                    <xsd:element name="username" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="SingleSettingResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="setting" type="types:SettingType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="SettingsListResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="moduleStatus" type="types:PullSettingsStatus"/>
+						<xsd:element name="settings" type="types:SettingType" minOccurs="0" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<!-- Create new setting in a module. -->
+			<xsd:element name="CreateSettingRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="source:ConfigDataSourceBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="moduleName" type="xsd:string"/>
+								<xsd:element name="setting" type="types:SettingType"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<!-- Create a number of settings at once -->
+			<xsd:element name="CreateAllSettingRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="source:ConfigDataSourceBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="moduleName" type="xsd:string"/>
+								<xsd:element name="settings" type="types:SettingType" minOccurs="1" maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<!-- Get a setting by ID. -->
+			<xsd:element name="GetSettingRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="source:ConfigDataSourceBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="settingId" type="xsd:long" minOccurs="0"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<!-- Update an existing setting. -->
+			<xsd:element name="UpdateSettingRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="source:ConfigDataSourceBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="id" type="xsd:long" minOccurs="0"/>
+								<xsd:element name="setting" type="types:SettingType"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<!-- Delete a setting. -->
+			<xsd:element name="DeleteSettingRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="source:ConfigDataSourceBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="settingId" type="xsd:long" minOccurs="0"/>
+								<xsd:element name="settingKey" type="xsd:string"/>
+								<xsd:element name="settingModule" type="xsd:string"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<!-- Get list of settings by module. -->
+			<xsd:element name="ListSettingsRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="source:ConfigDataSourceBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="moduleName" type="xsd:string"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<!-- Get catalog of settings for all modules. -->
+			<xsd:element name="GetSettingsCatalogRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="source:ConfigDataSourceBaseRequest"/>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="GetSettingsCatalogResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="setting" type="types:SettingsCatalogEntry" minOccurs="0" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<!-- Get global settings. -->
+			<xsd:element name="GetGlobalSettingsRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="source:ConfigDataSourceBaseRequest"/>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+		</xsd:schema>
+	</types>
+
+	<!-- MESSAGES -->
+
+	<message name="ConfigFault">
+		<part name="body" element="types:configFault"/>
+	</message>
+
+	<message name="CreateSettingRequest">
+		<part name="body" element="source:CreateSettingRequest"/>
+	</message>
+	<message name="CreateSettingResponse">
+		<part name="body" element="source:SingleSettingResponse"/>
+	</message>
+
+	<message name="CreateAllSettingsRequest">
+		<part name="body" element="source:CreateAllSettingRequest"/>
+	</message>
+	<message name="CreateAllSettingsResponse">
+		<part name="body" element="source:SettingsListResponse"/>
+	</message>
+
+	<message name="GetSettingRequest">
+		<part name="body" element="source:GetSettingRequest"/>
+	</message>
+	<message name="GetSettingResponse">
+		<part name="body" element="source:SingleSettingResponse"/>
+	</message>
+
+	<message name="ListSettingsRequest">
+		<part name="body" element="source:ListSettingsRequest"/>
+	</message>
+	<message name="ListSettingsResponse">
+		<part name="body" element="source:SettingsListResponse"/>
+	</message>
+
+	<message name="UpdateSettingRequest">
+		<part name="body" element="source:UpdateSettingRequest"/>
+	</message>
+	<message name="UpdateSettingResponse">
+		<part name="body" element="source:SingleSettingResponse"/>
+	</message>
+
+	<message name="DeleteSettingRequest">
+		<part name="body" element="source:DeleteSettingRequest"/>
+	</message>
+	<message name="DeleteSettingResponse">
+		<part name="body" element="source:SingleSettingResponse"/>
+	</message>
+
+	<message name="GetSettingsCatalogRequest">
+		<part name="body" element="source:GetSettingsCatalogRequest"/>
+	</message>
+	<message name="GetSettingsCatalogResponse">
+		<part name="body" element="source:GetSettingsCatalogResponse"/>
+	</message>
+
+	<message name="GetGlobalSettingsRequest">
+		<part name="body" element="source:GetGlobalSettingsRequest"/>
+	</message>
+	<message name="GetGlobalSettingsResponse">
+		<part name="body" element="source:SettingsListResponse"/>
+	</message>
+
+	<!-- OPERATIONS -->
+
+	<portType name="ConfigDataSourcePortType">
+		<operation name="CreateSetting">
+			<input message="source:CreateSettingRequest"/>
+			<output message="source:CreateSettingResponse"/>
+			<fault name="ConfigFault" message="source:ConfigFault"/>
+		</operation>
+		<operation name="CreateAllSettings">
+			<input message="source:CreateAllSettingsRequest"/>
+			<output message="source:CreateAllSettingsResponse"/>
+			<fault name="ConfigFault" message="source:ConfigFault"/>
+		</operation>
+		<operation name="GetSetting">
+			<input message="source:GetSettingRequest"/>
+			<output message="source:GetSettingResponse"/>
+			<fault name="ConfigFault" message="source:ConfigFault"/>
+		</operation>
+		<operation name="ListSettings">
+			<input message="source:ListSettingsRequest"/>
+			<output message="source:ListSettingsResponse"/>
+			<fault name="ConfigFault" message="source:ConfigFault"/>
+		</operation>
+		<operation name="UpdateSetting">
+			<input message="source:UpdateSettingRequest"/>
+			<output message="source:UpdateSettingResponse"/>
+			<fault name="ConfigFault" message="source:ConfigFault"/>
+		</operation>
+		<operation name="DeleteSetting">
+			<input message="source:DeleteSettingRequest"/>
+			<output message="source:DeleteSettingResponse"/>
+			<fault name="ConfigFault" message="source:ConfigFault"/>
+		</operation>
+		<operation name="GetSettingsCatalog">
+			<input message="source:GetSettingsCatalogRequest"/>
+			<output message="source:GetSettingsCatalogResponse"/>
+			<fault name="ConfigFault" message="source:ConfigFault"/>
+		</operation>
+		<operation name="GetGlobalSettings">
+			<input message="source:GetGlobalSettingsRequest"/>
+			<output message="source:GetGlobalSettingsResponse"/>
+			<fault name="ConfigFault" message="source:ConfigFault"/>
+		</operation>
+	</portType>
+
+	<!-- SOAP BINDING -->
+
+	<binding name="DataSourceSoapBinding" type="source:ConfigDataSourcePortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="CreateSetting">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="CreateAllSettings">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="GetSetting">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="UpdateSetting">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="DeleteSetting">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="ListSettings">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="GetSettingsCatalog">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="GetGlobalSettings">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+
+	<service name="DataSourceQueueService">
+		<port name="DataSourcePortType" binding="source:DataSourceSoapBinding">
+			<soap:address location="http://REPLACE_ME"/>
+		</port>
+	</service>
+
+</definitions>

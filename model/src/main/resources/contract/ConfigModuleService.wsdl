@@ -1,0 +1,333 @@
+<definitions name="ConfigModule"
+			targetNamespace="urn:module.config.schema.fisheries.ec.europa.eu:v1"
+			xmlns:module="urn:module.config.schema.fisheries.ec.europa.eu:v1" 
+			xmlns:types="urn:types.config.schema.fisheries.ec.europa.eu:v1" 
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+			xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+	<types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:module.config.schema.fisheries.ec.europa.eu:v1">
+			<xsd:import namespace="urn:types.config.schema.fisheries.ec.europa.eu:v1" schemaLocation="Element.xsd"/>
+
+			<xsd:simpleType name="ConfigModuleMethod">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="PULL"/>
+					<xsd:enumeration value="PUSH"/>
+					<xsd:enumeration value="SET"/>
+					<xsd:enumeration value="RESET"/>
+					<xsd:enumeration value="PING"/>
+					<xsd:enumeration value="LIST"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:complexType name="ConfigModuleBaseRequest" abstract="true">
+				<xsd:sequence>
+					<xsd:element name="method" type="module:ConfigModuleMethod"/>
+                    <xsd:element name="username" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<!-- Module PULL settings from Config. -->
+			<xsd:element name="PullSettingsRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="module:ConfigModuleBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="moduleName" type="xsd:string"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="PullSettingsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="status" type="types:PullSettingsStatus"/>
+						<xsd:element maxOccurs="unbounded" minOccurs="0" name="settings" type="types:SettingType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<!-- Module PUSH settings to config module. -->
+			<xsd:element name="PushSettingsRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="module:ConfigModuleBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="moduleName" type="xsd:string"/>
+								<xsd:element maxOccurs="unbounded" minOccurs="0" name="settings" type="types:SettingType"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="PushSettingsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="status" type="types:PullSettingsStatus"/>
+						<xsd:element maxOccurs="unbounded" minOccurs="0" name="settings" type="types:SettingType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="SetSettingRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="module:ConfigModuleBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="setting" type="types:SettingType"/>
+								<xsd:element name="module" type="xsd:string"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="ResetSettingRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="module:ConfigModuleBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="setting" type="types:SettingType"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="ListSettingsRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="module:ConfigModuleBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="moduleName" type="xsd:string"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="SingleSettingResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="setting" type="types:SettingType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="SettingsListResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="unbounded" minOccurs="0" name="settings" type="types:SettingType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:simpleType name="ConfigModuleStatus">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="DEPLOYED"/>
+					<xsd:enumeration value="SETTING_CHANGED"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:complexType name="ConfigTopicBaseRequest" abstract="true">
+				<xsd:sequence>
+					<xsd:element name="status" type="module:ConfigModuleStatus"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:element name="ConfigModuleStatusMessage">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="module:ConfigTopicBaseRequest"/>
+					</xsd:complexContent>
+				</xsd:complexType>
+				
+			</xsd:element>
+
+			<xsd:element name="PingRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="module:ConfigModuleBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="moduleName" type="xsd:string"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:simpleType name="SettingEventType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="SET"/>
+					<xsd:enumeration value="RESET"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:element name="PushModuleSettingMessage">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="module:ConfigTopicBaseRequest">
+							<xsd:sequence>
+								<xsd:element name="action" type="module:SettingEventType"/>
+								<xsd:element name="setting" type="types:SettingType"/>
+							</xsd:sequence>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+		</xsd:schema>
+	</types>
+
+	<!-- MESSAGES -->
+
+	<message name="ConfigFault">
+		<part name="body" element="types:configFault"/>
+	</message>
+
+	<message name="ConfigModuleStatusMessage">
+		<part name="body" element="module:ConfigModuleStatusMessage"></part>
+	</message>
+
+	<message name="PushModuleSettingMessage">
+		<part name="body" element="module:ConfigModuleStatusMessage"></part>
+	</message>
+
+	<message name="PullSettingsRequest">
+		<part name="body" element="module:PullSettingsRequest"/>
+	</message>
+	<message name="PullSettingsResponse">
+		<part name="body" element="module:PullSettingsResponse"/>
+	</message>
+
+	<message name="PushSettingsRequest">
+		<part name="body" element="module:PushSettingsRequest"/>
+	</message>
+	<message name="PushSettingsResponse">
+		<part name="body" element="module:PushSettingsResponse"/>
+	</message>
+
+	<message name="SetSettingRequest">
+		<part name="body" element="module:SetSettingRequest"/>
+	</message>
+	<message name="SetSettingResponse">
+		<part name="body" element="module:SingleSettingResponse"/>
+	</message>
+
+	<message name="ResetSettingsRequest">
+		<part name="body" element="module:ResetSettingRequest"/>
+	</message>
+	<message name="ResetSettingResponse">
+		<part name="body" element="module:SingleSettingResponse"/>
+	</message>
+
+	<message name="ListSettingsRequest">
+		<part name="body" element="module:ListSettingsRequest"/>
+	</message>
+	<message name="ListSettingsResponse">
+		<part name="body" element="module:SettingsListResponse"/>
+	</message>
+
+	<!-- OPERATIONS -->
+
+	<portType name="ConfigModulePortType">
+		<operation name="PullSettings">
+			<input message="module:PullSettingsRequest"/>
+			<output message="module:PullSettingsResponse"/>
+			<fault name="ConfigFault" message="module:ConfigFault"/>
+		</operation>
+		<operation name="PushSettings">
+			<input message="module:PushSettingsRequest"/>
+			<output message="module:PushSettingsResponse"/>
+			<fault name="ConfigFault" message="module:ConfigFault"/>
+		</operation>
+		<operation name="SetSetting">
+			<input message="module:SetSettingRequest"/>
+			<output message="module:SetSettingResponse"/>
+			<fault name="ConfigFault" message="module:ConfigFault"/>
+		</operation>
+		<operation name="ResetSetting">
+			<input message="module:ResetSettingsRequest"/>
+			<output message="module:ResetSettingResponse"/>
+			<fault name="ConfigFault" message="module:ConfigFault"/>
+		</operation>
+		<operation name="GetSetting">
+			<input message="module:ListSettingsRequest"/>
+			<output message="module:ListSettingsResponse"/>
+			<fault name="ConfigFault" message="module:ConfigFault"/>
+		</operation>
+	</portType>
+
+	<!-- SOAP BINDINGS -->
+
+	<binding name="ConfigModuleSoapBinding" type="module:ConfigModulePortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+		<operation name="PullSettings">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="PushSettings">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="SetSetting">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="ResetSetting">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="GetSetting">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="ConfigFault">
+				<soap:fault name="ConfigFault" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+
+	<service name="ConfigModuleService">
+		<port name="ConfigModulePortType" binding="module:ConfigModuleSoapBinding">
+			<soap:address location="http://REPLACE_ME"/>
+		</port>
+	</service>
+
+</definitions>
