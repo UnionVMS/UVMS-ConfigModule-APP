@@ -17,10 +17,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.jms.*;
 
-import eu.europa.ec.fisheries.uvms.message.JMSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.config.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.config.message.consumer.MessageConsumer;
 import eu.europa.ec.fisheries.uvms.config.message.exception.MessageException;

@@ -29,6 +29,7 @@ import javax.jms.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.config.message.constants.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.config.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
@@ -37,7 +38,6 @@ import eu.europa.ec.fisheries.uvms.config.message.exception.MessageException;
 import eu.europa.ec.fisheries.uvms.config.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.message.JMSUtils;
 
 @Singleton
 public class MessageProducerBean implements MessageProducer {
