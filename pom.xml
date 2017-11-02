@@ -24,9 +24,9 @@
         <logback.version>1.2.3</logback.version>
         <logback.core.version>1.2.3</logback.core.version>
 
-        <usm4uvms.version>4.0.0</usm4uvms.version>
+        <usm4uvms.version>4.0.1</usm4uvms.version>
         <audit.model.version>4.0.0</audit.model.version>
-        <uvms.common.version>3.0.0</uvms.common.version>
+        <uvms.common.version>3.0.2</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
