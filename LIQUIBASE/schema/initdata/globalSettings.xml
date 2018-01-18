@@ -86,6 +86,15 @@
             <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
 			<column name="updated_by" value="UVMS"/>
         </insert>
+        <insert tableName="settings">
+            <column name="setting_id" value="100"/>
+            <column name="setting_key" value="headerTemplate"/>
+            <column name="setting_value" value="default"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="Header template frontend"/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
         <rollback>
             <delete tableName="settings">
                 <where>
