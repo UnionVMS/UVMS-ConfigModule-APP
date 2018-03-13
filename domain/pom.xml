@@ -21,12 +21,6 @@
     </properties>
 
     <dependencies>
- 		<dependency>
-			<groupId>fish.focus.uvms.maven</groupId>
-			<artifactId>uvms-pom-gis-deps</artifactId>
-			<type>pom</type>
-			<scope>provided</scope>
-		</dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>config-model</artifactId>
