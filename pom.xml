@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>fish.focus.uvms.maven</groupId>
 		<artifactId>uvms-pom</artifactId>
-		<version>1.17-SNAPSHOT</version>
+		<version>1.17</version>
 	</parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
@@ -26,7 +26,7 @@
 
         <usm4uvms.version>4.0.4</usm4uvms.version>
         <audit.model.version>4.0.0</audit.model.version>
-        <uvms.common.version>3.0.5</uvms.common.version>
+        <uvms.common.version>3.0.16</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
