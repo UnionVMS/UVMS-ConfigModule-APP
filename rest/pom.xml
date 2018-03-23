@@ -9,7 +9,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
         <artifactId>config</artifactId>
-        <version>4.0.8-SNAPSHOT</version>
+        <version>4.0.9-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -111,28 +111,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.google.code.maven-replacer-plugin</groupId>
-                        <artifactId>replacer</artifactId>
-                        <version>1.5.3</version>
-                        <executions>
-                            <execution>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>replace</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <file>${basedir}/src/main/webapp/apidocs/index.html</file>
-                            <replacements>
-                                <replacement>
-                                    <token>new ApiKeyAuthorization\("api_key", key, "query"\)</token>
-                                    <value>new ApiKeyAuthorization("Authorization", key, "header")</value>
-                                </replacement>
-                            </replacements>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

@@ -9,7 +9,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
     <artifactId>config</artifactId>
-    <version>4.0.8-SNAPSHOT</version>
+    <version>4.0.9-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
 
@@ -26,7 +26,7 @@
 
         <usm4uvms.version>4.0.9</usm4uvms.version>
         <audit.model.version>4.0.0</audit.model.version>
-        <uvms.common.version>3.0.15</uvms.common.version>
+        <uvms.common.version>3.0.16</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
