@@ -41,7 +41,7 @@
         	<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-gis-deps</artifactId>
-				<version>1.16</version>
+				<version>1.18</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
