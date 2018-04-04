@@ -11,28 +11,25 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.service.bean;
 
+import eu.europa.ec.fisheries.uvms.config.message.producer.bean.ConfigMessageProducerBean;
+import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 import javax.ejb.DependsOn;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.uvms.config.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 @Singleton
 @Startup
-@DependsOn(value = { "MessageProducerBean" })
+@DependsOn(value = { "ConfigMessageProducerBean" })
 public class ConfigStartupAction {
 
     @EJB
-    MessageProducer producer;
+    private ConfigMessageProducerBean producer;
 
     final static Logger LOG = LoggerFactory.getLogger(ConfigStartupAction.class);
 

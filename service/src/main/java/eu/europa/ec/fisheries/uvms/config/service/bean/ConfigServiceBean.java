@@ -11,33 +11,29 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.service.bean;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-
-import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCatalogEntry;
-import eu.europa.ec.fisheries.uvms.config.ConfigDomainModel;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
+import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCatalogEntry;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
-import eu.europa.ec.fisheries.uvms.config.message.constants.DataSourceQueue;
-import eu.europa.ec.fisheries.uvms.config.message.exception.MessageException;
-import eu.europa.ec.fisheries.uvms.config.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
+import eu.europa.ec.fisheries.uvms.config.ConfigDomainModel;
+import eu.europa.ec.fisheries.uvms.config.message.producer.bean.ConfigMessageProducerBean;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditObjectTypeEnum;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditOperationEnum;
+import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMapperException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.config.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Stateless
 public class ConfigServiceBean implements ConfigService {
@@ -45,13 +41,13 @@ public class ConfigServiceBean implements ConfigService {
     final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
 
     @EJB
-    MessageProducer producer;
+    private ConfigMessageProducerBean producer;
 
     @Inject
-    ModuleAvailabilityBean moduleAvailability;
+    private ModuleAvailabilityBean moduleAvailability;
     
     @EJB
-    ConfigDomainModel configModel;
+    private ConfigDomainModel configModel;
 
     @Override
     public SettingType create(SettingType setting, String moduleName, String username) throws ServiceException {
@@ -61,7 +57,7 @@ public class ConfigServiceBean implements ConfigService {
             sendAuditMessage(AuditOperationEnum.CREATE, createdSetting, username);
             return createdSetting;
         }
-        catch (ModelMapperException | MessageException | ConfigModelException e) {
+        catch (ModelMapperException | eu.europa.ec.fisheries.uvms.commons.message.api.MessageException | ConfigModelException e) {
             LOG.error("[ Error when creating setting. {} ] {}",setting, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
@@ -201,7 +197,7 @@ public class ConfigServiceBean implements ConfigService {
             }
 
             String message = AuditLogMapper.mapToAuditLog(AuditObjectTypeEnum.SETTING.getValue(), operation.getValue(), affectedObject, userName);
-            producer.sendDataSourceMessage(message, DataSourceQueue.AUDIT);
+            producer.sendAuditMessage(message);
         }
         catch (AuditModelMarshallException | MessageException e) {
             LOG.error("[ Error when sending message to Audit. {} {} {} ] {}",operation,setting,userName, e.getMessage());

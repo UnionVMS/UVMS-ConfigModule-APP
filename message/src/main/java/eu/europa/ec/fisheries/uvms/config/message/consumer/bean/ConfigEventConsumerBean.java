@@ -11,6 +11,10 @@
  */
 package eu.europa.ec.fisheries.uvms.config.message.consumer.bean;
 
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
+import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
+import eu.europa.ec.fisheries.uvms.config.message.event.MessageRecievedEvent;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.ejb.TransactionAttribute;
@@ -20,33 +24,27 @@ import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.uvms.config.message.constants.MessageConstants;
-import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
-import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
-import eu.europa.ec.fisheries.uvms.config.message.event.MessageRecievedEvent;
-
-@MessageDriven(mappedName = MessageConstants.COMPONENT_MESSAGE_IN_QUEUE, activationConfig = {
-    @ActivationConfigProperty(propertyName = "messagingType", propertyValue = MessageConstants.CONNECTION_TYPE),
-    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = MessageConstants.DESTINATION_TYPE_QUEUE),
-    @ActivationConfigProperty(propertyName = "destination", propertyValue = MessageConstants.COMPONENT_MESSAGE_IN_QUEUE_NAME),
-    @ActivationConfigProperty(propertyName = "destinationJndiName", propertyValue = MessageConstants.COMPONENT_MESSAGE_IN_QUEUE),
-    @ActivationConfigProperty(propertyName = "connectionFactoryJndiName", propertyValue = MessageConstants.CONNECTION_FACTORY)
+@MessageDriven(mappedName = MessageConstants.QUEUE_CONFIG, activationConfig = {
+        @ActivationConfigProperty(propertyName = MessageConstants.MESSAGING_TYPE_STR, propertyValue = MessageConstants.CONNECTION_TYPE),
+        @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_TYPE_STR, propertyValue = MessageConstants.DESTINATION_TYPE_QUEUE),
+        @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_STR, propertyValue = MessageConstants.QUEUE_CONFIG_IN_NAME),
+        @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_JNDI_NAME, propertyValue = MessageConstants.QUEUE_CONFIG),
+        @ActivationConfigProperty(propertyName = MessageConstants.CONNECTION_FACTORY_JNDI_NAME, propertyValue = MessageConstants.CONNECTION_FACTORY)
 })
-public class MessageConsumerBean implements MessageListener {
+public class ConfigEventConsumerBean implements MessageListener {
 
-    final static Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
+    final static Logger LOG = LoggerFactory.getLogger(ConfigEventConsumerBean.class);
 
     @Inject
     @MessageRecievedEvent
-    Event<EventMessage> messageRecievedEvent;
+    private Event<EventMessage> messageRecievedEvent;
 
     @Inject
     @ErrorEvent
-    Event<EventMessage> errorEvent;
+    private Event<EventMessage> errorEvent;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

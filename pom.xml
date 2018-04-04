@@ -26,7 +26,7 @@
 
         <usm4uvms.version>4.0.4</usm4uvms.version>
         <audit.model.version>4.0.0</audit.model.version>
-        <uvms.common.version>3.0.16</uvms.common.version>
+        <uvms.common.version>3.0.18-SNAPSHOT</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>

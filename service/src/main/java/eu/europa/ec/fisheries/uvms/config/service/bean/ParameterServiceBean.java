@@ -34,7 +34,7 @@ public class ParameterServiceBean implements ParameterService {
     final static Logger LOG = LoggerFactory.getLogger(ParameterServiceBean.class);
 
     @PersistenceContext(unitName = "config")
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public String getStringValue(ParameterKey key) throws ServiceException {

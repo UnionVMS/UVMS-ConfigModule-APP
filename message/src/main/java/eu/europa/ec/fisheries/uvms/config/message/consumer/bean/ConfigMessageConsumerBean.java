@@ -9,20 +9,20 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.config.message.exception;
+package eu.europa.ec.fisheries.uvms.config.message.consumer.bean;
 
-public class MessageException extends Exception {
-    private static final long serialVersionUID = 1L;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractConsumer;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 
-    public MessageException() {
-    }
+@Stateless
+@LocalBean
+public class ConfigMessageConsumerBean extends AbstractConsumer {
 
-    public MessageException(String message) {
-        super(message);
-    }
-
-    public MessageException(String message, Throwable cause) {
-        super(message, cause);
+    @Override
+    public String getDestinationName() {
+        return MessageConstants.QUEUE_CONFIG_RESPONSE;
     }
 
 }
