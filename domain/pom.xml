@@ -5,7 +5,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
         <artifactId>config</artifactId>
-        <version>4.0.9-SNAPSHOT</version>
+        <version>4.0.10-SNAPSHOT</version>
     </parent>
     
     <name>${project.parent.artifactId}-domain</name>
@@ -21,12 +21,6 @@
     </properties>
 
     <dependencies>
- 		<dependency>
-			<groupId>fish.focus.uvms.maven</groupId>
-			<artifactId>uvms-pom-gis-deps</artifactId>
-			<type>pom</type>
-			<scope>provided</scope>
-		</dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>config-model</artifactId>
