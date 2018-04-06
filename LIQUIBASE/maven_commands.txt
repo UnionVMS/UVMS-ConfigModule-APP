@@ -4,8 +4,12 @@ mvn liquibase:status -P postgres
 ## Update database
 mvn liquibase:update -P postgres
 
+## Drop database
+mvn liquibase:dropAll -P postgres
+
 ## Rollback the database to a specified tag
 mvn liquibase:rollback -P postgres -Dliquibase.rollbackTag=version_0.1
+
 ## Rollback the database a specific number of changes
 mvn liquibase:rollback -P postgres -Dliquibase.rollbackCount=1
 
