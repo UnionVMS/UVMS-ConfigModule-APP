@@ -278,6 +278,7 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
         // Create new setting
         Setting entity = mapper.toEntity(setting, username);
         Setting createdSetting = dao.createSetting(entity);
+        createdSetting.setModule(module);
         module.getSettings().add(createdSetting);
         return mapper.toModel(createdSetting);
     }
