@@ -29,9 +29,11 @@ import org.slf4j.LoggerFactory;
 
 public class JAXBMarshaller {
 
-    final static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
+    private final static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
 
     private static Map<String, JAXBContext> contexts = new HashMap<>();
+
+    private JAXBMarshaller(){/* Not allowed */}
 
     /**
      * Marshalls a JAXB Object to a XML String representation
@@ -99,5 +101,4 @@ public class JAXBMarshaller {
             throw new ModelMarshallException("[Error when unmarshalling response in ResponseMapper ]", ex);
         }
     }
-
 }
