@@ -23,12 +23,11 @@ import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoMappingException;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
-import eu.europa.ec.fisheries.uvms.config.util.DateUtils;
 
 @Stateless
 public class ConfigMapperBean implements ConfigMapper {
 
-    final static Logger LOG = LoggerFactory.getLogger(ConfigMapperBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ConfigMapperBean.class);
 
     private Setting mapToEntity(Setting entity, SettingType setting, String username) throws DaoMappingException {
         try {

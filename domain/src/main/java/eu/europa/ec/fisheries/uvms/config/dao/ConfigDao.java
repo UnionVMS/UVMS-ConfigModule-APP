@@ -43,7 +43,7 @@ public interface ConfigDao {
     /**
      * Updates a setting in the database.
      *
-     * @param setting a setting
+     * @param vessel a setting
      * @return the updated setting
      * @throws DaoException if the setting could not be updated
      */
