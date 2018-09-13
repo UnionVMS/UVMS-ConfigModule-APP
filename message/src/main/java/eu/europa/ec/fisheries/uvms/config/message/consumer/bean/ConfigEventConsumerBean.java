@@ -12,9 +12,13 @@
 package eu.europa.ec.fisheries.uvms.config.message.consumer.bean;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.commons.message.context.MappedDiagnosticContext;
 import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.config.message.event.MessageRecievedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.ejb.TransactionAttribute;
@@ -24,8 +28,6 @@ import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @MessageDriven(mappedName = MessageConstants.QUEUE_CONFIG, activationConfig = {
         @ActivationConfigProperty(propertyName = MessageConstants.MESSAGING_TYPE_STR, propertyValue = MessageConstants.CONNECTION_TYPE),
@@ -50,6 +52,7 @@ public class ConfigEventConsumerBean implements MessageListener {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
         TextMessage textMessage = (TextMessage) message;
+        MappedDiagnosticContext.addMessagePropertiesToThreadMappedDiagnosticContext(textMessage);
         try {
             LOG.info("Message received in config");
             messageRecievedEvent.fire(new EventMessage(textMessage));
