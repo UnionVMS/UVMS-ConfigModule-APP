@@ -12,22 +12,16 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.config.rest.filter;
 
 import eu.europa.ec.fisheries.uvms.config.rest.constants.RestConstants;
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.UUID;
 
-
-/**
- **/
 @WebFilter(asyncSupported = true, urlPatterns = {"/*"})
 public class RequestFilter implements Filter {
 
@@ -35,11 +29,12 @@ public class RequestFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        LOG.info("Requstfilter starting up!");
+        LOG.info("RequestFilter starting up!");
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        MDC.put("requestId", UUID.randomUUID().toString());
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_ORIGIN, RestConstants.ACCESS_CONTROL_ALLOW_METHODS_ALL);
         response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_METHODS, RestConstants.ACCESS_CONTROL_ALLOWED_METHODS);
@@ -49,7 +44,7 @@ public class RequestFilter implements Filter {
 
     @Override
     public void destroy() {
-        LOG.info("Requstfilter shuting down!");
+        LOG.info("RequestFilter shutting down!");
     }
 
 }
