@@ -19,19 +19,21 @@ import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.jms.DeliveryMode;
 
 @Stateless
 @LocalBean
 public class ConfigMessageProducerBean extends AbstractProducer {
 
-    final static Logger LOG = LoggerFactory.getLogger(ConfigMessageProducerBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigMessageProducerBean.class);
 
     @EJB
     private ConfigMessageConsumerBean configConsumer;
@@ -53,7 +55,7 @@ public class ConfigMessageProducerBean extends AbstractProducer {
     public void sendModuleErrorMessage(@Observes @ErrorEvent EventMessage eventMessage) throws MessageException {
         try {
             String faultString = JAXBMarshaller.marshallJaxBObjectToString(eventMessage.getFault());
-            this.sendResponseMessageToSender(eventMessage.getJmsMessage(), faultString);
+            this.sendResponseMessageToSender(eventMessage.getJmsMessage(), faultString, 60000, DeliveryMode.NON_PERSISTENT);
         } catch (ModelMarshallException | MessageException e) {
             LOG.error("[ Error when sending module error message. ] {}", e.getMessage());
             throw new MessageException("[ Error when sending module error message. ]", e);
