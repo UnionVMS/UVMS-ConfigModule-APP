@@ -13,6 +13,13 @@
     </parent>
 
     <dependencies>
+        <!-- RestEasy Dependency for new Servlet api v.3.0 -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-servlet-initializer</artifactId>
+            <version>3.6.1.Final</version>
+        </dependency>
+
         <!-- EJB DEPENDENCS -->
         <dependency>
 			<groupId>fish.focus.uvms.maven</groupId>
