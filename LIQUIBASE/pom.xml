@@ -14,7 +14,6 @@
         <project.scm.id>github</project.scm.id>
         <repository.id>${project.distributionManagement.snapshotRepository.id}</repository.id>
         <repository.url>${project.distributionManagement.snapshotRepository.url}</repository.url>
-		<docker.liquibase.changeLogFile>changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
     </properties>
 
     <distributionManagement>
@@ -39,13 +38,6 @@
     </repositories>
 	
     <profiles>
-		<profile>
-			<id>docker</id>
-			<properties>
-				<docker.liquibase.db.user>config</docker.liquibase.db.user>
-				<docker.liquibase.db.passwd>config</docker.liquibase.db.passwd>
-			</properties>
-		</profile>
         <profile>
             <id>postgres</id>
             <activation>
@@ -136,7 +128,7 @@
 							<images>
 								<image>
 									<alias>postgres</alias>
-									<name>uvms/postgres-base:3.22.0</name>
+									<name>uvms/postgres-base:${docker.dev.version}</name>
 									<run>
 										<net>bridge</net>
 										<namingStrategy>none</namingStrategy>

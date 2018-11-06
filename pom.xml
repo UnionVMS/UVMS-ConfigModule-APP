@@ -16,7 +16,10 @@
 
     <properties>
         <config.api.check.against.version>4.0.0</config.api.check.against.version>
-        <docker.dev.version>3.22.0</docker.dev.version>
+        <docker.dev.version>3.29.2.w14</docker.dev.version>
+        <docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
+        <docker.liquibase.db.user>config</docker.liquibase.db.user>
+        <docker.liquibase.db.passwd>config</docker.liquibase.db.passwd>
         <mockito.version>1.10.16</mockito.version>
         <junit.version>4.12</junit.version>
         <javaee.version>7.0</javaee.version>
