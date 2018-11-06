@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>fish.focus.uvms.maven</groupId>
-		<artifactId>uvms-pom</artifactId>
-		<version>1.18</version>
-	</parent>
+    <parent>
+        <groupId>fish.focus.uvms.maven</groupId>
+        <artifactId>uvms-pom</artifactId>
+        <version>1.21</version>
+    </parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
     <artifactId>config</artifactId>
@@ -14,8 +15,8 @@
     <description>Maven projekt-archetype for UnionVms modules</description>
 
     <properties>
-    	<config.api.check.against.version>4.0.0</config.api.check.against.version>
-    	<docker.dev.version>3.22.0</docker.dev.version>
+        <config.api.check.against.version>4.0.0</config.api.check.against.version>
+        <docker.dev.version>3.22.0</docker.dev.version>
         <mockito.version>1.10.16</mockito.version>
         <junit.version>4.12</junit.version>
         <javaee.version>7.0</javaee.version>
@@ -23,51 +24,49 @@
         <sl4j.version>1.7.25</sl4j.version>
         <logback.version>1.2.3</logback.version>
         <logback.core.version>1.2.3</logback.core.version>
-
-        <usm4uvms.version>4.0.11</usm4uvms.version>
+        <usm4uvms.version>4.0.13-SNAPSHOT</usm4uvms.version>
         <audit.model.version>4.0.10</audit.model.version>
         <uvms.common.version>3.0.28</uvms.common.version>
-
         <project.scm.id>github</project.scm.id>
     </properties>
-	<dependencies>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+        </dependency>
+    </dependencies>
     <dependencyManagement>
         <dependencies>
-        	<dependency>
-				<groupId>fish.focus.uvms.maven</groupId>
-				<artifactId>uvms-pom-gis-deps</artifactId>
-				<version>1.18</version>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>fish.focus.uvms.maven</groupId>
-				<artifactId>uvms-pom-logging-deps</artifactId>
-				<version>1.18</version>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>fish.focus.uvms.maven</groupId>
-				<artifactId>uvms-pom-monitoring-deps</artifactId>
-				<version>1.18</version>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>fish.focus.uvms.maven</groupId>
-				<artifactId>uvms-pom-test-deps</artifactId>
-				<version>1.18</version>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>fish.focus.uvms.maven</groupId>
-				<artifactId>uvms-pom-arquillian-deps</artifactId>
-				<version>1.18</version>
-				<type>pom</type>
-			</dependency>
+            <dependency>
+                <groupId>fish.focus.uvms.maven</groupId>
+                <artifactId>uvms-pom-gis-deps</artifactId>
+                <version>1.21</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>fish.focus.uvms.maven</groupId>
+                <artifactId>uvms-pom-logging-deps</artifactId>
+                <version>1.21</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>fish.focus.uvms.maven</groupId>
+                <artifactId>uvms-pom-monitoring-deps</artifactId>
+                <version>1.21</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>fish.focus.uvms.maven</groupId>
+                <artifactId>uvms-pom-test-deps</artifactId>
+                <version>1.18</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>fish.focus.uvms.maven</groupId>
+                <artifactId>uvms-pom-arquillian-deps</artifactId>
+                <version>1.21</version>
+                <type>pom</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -94,16 +93,57 @@
 
     <scm>
         <connection>scm:git:https://github.com/UnionVMS/UVMS-ConfigModule-APP.git</connection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
-  <modules>
-  	<module>model</module>
-  	<module>LIQUIBASE</module>
-  	<module>domain</module>
-    <module>rest</module>
-    <module>service</module>
-    <module>message</module>
-    <module>module</module>
-  </modules>
+    <profiles>
+        <!-- enforce-jdk-version -->
+        <profile>
+            <id>enforce-jdk-version</id>
+            <activation>
+                <!-- To disable profile, define property -Dfocus-pom.enforce.jdk.version.disabled=true -->
+                <property>
+                    <name>!focus-pom.enforce.jdk.version.disabled</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>enforce-jdk-version</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <enforceBytecodeVersion>
+                                            <maxJdkVersion>${focus-pom.java.version}</maxJdkVersion>
+                                            <!-- NOTE: xstream do contain support for multiple jdk:s -->
+                                            <excludes>
+                                                <exclude>com.thoughtworks.xstream:xstream</exclude>
+                                            </excludes>
+                                        </enforceBytecodeVersion>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <modules>
+        <module>model</module>
+        <module>LIQUIBASE</module>
+        <module>domain</module>
+        <module>rest</module>
+        <module>service</module>
+        <module>message</module>
+        <module>module</module>
+    </modules>
 </project>

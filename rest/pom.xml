@@ -13,6 +13,7 @@
     </parent>
 
     <dependencies>
+
         <!-- EJB DEPENDENCS -->
         <dependency>
 			<groupId>fish.focus.uvms.maven</groupId>
