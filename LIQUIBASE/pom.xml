@@ -14,7 +14,7 @@
         <project.scm.id>github</project.scm.id>
         <repository.id>${project.distributionManagement.snapshotRepository.id}</repository.id>
         <repository.url>${project.distributionManagement.snapshotRepository.url}</repository.url>
-		<docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
+		<docker.liquibase.changeLogFile>changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
     </properties>
 
     <distributionManagement>
