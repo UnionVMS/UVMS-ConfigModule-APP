@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Message;
@@ -38,7 +36,7 @@ import javax.jms.TextMessage;
 })
 public class ConfigEventConsumerBean implements MessageListener {
 
-    final static Logger LOG = LoggerFactory.getLogger(ConfigEventConsumerBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigEventConsumerBean.class);
 
     @Inject
     @MessageRecievedEvent
