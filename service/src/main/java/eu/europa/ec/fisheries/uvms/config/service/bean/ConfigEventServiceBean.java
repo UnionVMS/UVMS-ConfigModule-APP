@@ -11,20 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.service.bean;
 
-import eu.europa.ec.fisheries.schema.config.module.v1.ConfigModuleBaseRequest;
-import eu.europa.ec.fisheries.schema.config.module.v1.ListSettingsRequest;
-import eu.europa.ec.fisheries.schema.config.module.v1.PingRequest;
-import eu.europa.ec.fisheries.schema.config.module.v1.PullSettingsRequest;
-import eu.europa.ec.fisheries.schema.config.module.v1.PushSettingsRequest;
-import eu.europa.ec.fisheries.schema.config.module.v1.ResetSettingRequest;
-import eu.europa.ec.fisheries.schema.config.module.v1.SetSettingRequest;
+import eu.europa.ec.fisheries.schema.config.module.v1.*;
 import eu.europa.ec.fisheries.schema.config.types.v1.ConfigFault;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
-import eu.europa.ec.fisheries.uvms.config.message.event.MessageRecievedEvent;
+import eu.europa.ec.fisheries.uvms.config.message.event.ConfigMessageRecievedEvent;
 import eu.europa.ec.fisheries.uvms.config.message.producer.bean.ConfigMessageProducerBean;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMapperException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
@@ -32,9 +26,9 @@ import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.config.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.config.service.EventService;
 import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -44,13 +38,14 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Stateless
 public class ConfigEventServiceBean implements EventService {
 
-    final static Logger LOG = LoggerFactory.getLogger(ConfigEventServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigEventServiceBean.class);
 
     @EJB
     private ConfigMessageProducerBean configMessageProducer;
@@ -60,66 +55,71 @@ public class ConfigEventServiceBean implements EventService {
     private Event<EventMessage> errorEvent;
 
     @EJB
-    private ConfigService service;
+    private ConfigService configService;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void getData(@Observes @MessageRecievedEvent EventMessage message) {
+    public void getData(@Observes @ConfigMessageRecievedEvent EventMessage message) {
         TextMessage jmsMessage = message.getJmsMessage();
         try {
             ConfigModuleBaseRequest baseRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, ConfigModuleBaseRequest.class);
             String responseMessage;
-            LOG.info("[INFO] Received message with following ConfigModuleMethod : {}",baseRequest.getMethod());
+            LOG.info("[START] Received message with following ConfigModuleMethod : {}",baseRequest.getMethod());
             switch (baseRequest.getMethod()) {
                 case PULL:
                     PullSettingsRequest pullRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, PullSettingsRequest.class);
-                    LOG.info("[INFO] Going to fetch the settings related to module : {}", pullRequest.getModuleName());
-                    List<SettingType> settings = service.getList(pullRequest.getModuleName());
+                    String moduleName = pullRequest.getModuleName();
+                    List<SettingType> settings = configService.getList(moduleName);
                     if (settings == null) {
-                        responseMessage = ModuleResponseMapper.toPullSettingsResponse(new ArrayList<SettingType>(), PullSettingsStatus.MISSING);
+                        responseMessage = ModuleResponseMapper.toPullSettingsResponse(new ArrayList<>(), PullSettingsStatus.MISSING);
                     } else {
                         responseMessage = ModuleResponseMapper.toPullSettingsResponse(settings, PullSettingsStatus.OK);
                     }
                     configMessageProducer.sendResponseMessageToSender(jmsMessage, responseMessage);
+                    LOG.info("[END] Settings sent back to module : [{}]", moduleName);
                     break;
                 case PUSH:
                     PushSettingsRequest pushRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, PushSettingsRequest.class);
                     List<SettingType> localSettings = getLocalSettings(pushRequest.getSettings());
-                    List<SettingType> createdSettings = service.createAll(localSettings, pushRequest.getModuleName(), baseRequest.getUsername());
-                    createdSettings.addAll(service.getGlobalSettings());
+                    List<SettingType> createdSettings = configService.createAll(localSettings, pushRequest.getModuleName(), baseRequest.getUsername());
+                    createdSettings.addAll(configService.getGlobalSettings());
                     responseMessage = ModuleResponseMapper.toPushSettingsResponse(createdSettings);
                     configMessageProducer.sendResponseMessageToSender(jmsMessage, responseMessage);
+                    LOG.info("[END] PushSettingsResponse sent back to module : [{}]", pushRequest.getModuleName());
                     break;
                 case SET:
                     SetSettingRequest setRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, SetSettingRequest.class);
-                    SettingType createdSetting = service.create(setRequest.getSetting(), setRequest.getModule(), baseRequest.getUsername());
+                    SettingType createdSetting = configService.create(setRequest.getSetting(), setRequest.getModule(), baseRequest.getUsername());
                     responseMessage = ModuleResponseMapper.toSingleSettingResponse(createdSetting);
                     configMessageProducer.sendResponseMessageToSender(jmsMessage, responseMessage);
+                    LOG.info("[END] SetSettingResponse sent back to module : [{}]", setRequest.getModule());
                     break;
                 case RESET:
                     ResetSettingRequest resetRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, ResetSettingRequest.class);
                     SettingType deletedSetting;
                     if (resetRequest.getSetting().getId() != null) {
-                        deletedSetting = service.delete(resetRequest.getSetting().getId(), baseRequest.getUsername());
+                        deletedSetting = configService.delete(resetRequest.getSetting().getId(), baseRequest.getUsername());
                     } else {
-                        deletedSetting = service.delete(resetRequest.getSetting().getKey(), resetRequest.getSetting().getModule(), baseRequest.getUsername());
+                        deletedSetting = configService.delete(resetRequest.getSetting().getKey(), resetRequest.getSetting().getModule(), baseRequest.getUsername());
                     }
                     responseMessage = ModuleResponseMapper.toSingleSettingResponse(deletedSetting);
                     configMessageProducer.sendResponseMessageToSender(jmsMessage, responseMessage);
+                    LOG.info("[END] ResetSettingResponse sent back to module..");
                     break;
                 case PING:
                     PingRequest pingRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, PingRequest.class);
-                    service.setModuleTimestamp(pingRequest.getModuleName(), new Date(jmsMessage.getJMSTimestamp()));
+                    configService.setModuleTimestamp(pingRequest.getModuleName(), new Date(jmsMessage.getJMSTimestamp()));
                     break;
                 case LIST:
                     ListSettingsRequest listRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, ListSettingsRequest.class);
-                    List<SettingType> list = service.getList(listRequest.getModuleName());
+                    List<SettingType> list = configService.getList(listRequest.getModuleName());
                     if (list == null) {
-                        responseMessage = ModuleResponseMapper.toSettingsListResponse(new ArrayList<SettingType>());
+                        responseMessage = ModuleResponseMapper.toSettingsListResponse(new ArrayList<>());
                     } else {
                         responseMessage = ModuleResponseMapper.toSettingsListResponse(list);
                     }
                     configMessageProducer.sendResponseMessageToSender(jmsMessage, responseMessage);
+                    LOG.info("[END] ListSettingsResponse sent back to module : [{}]", listRequest.getModuleName());
                     break;
                 default:
                     break;

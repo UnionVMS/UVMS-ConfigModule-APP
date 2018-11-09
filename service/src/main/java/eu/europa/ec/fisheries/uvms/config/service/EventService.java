@@ -15,11 +15,11 @@ import javax.ejb.Local;
 import javax.enterprise.event.Observes;
 
 import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
-import eu.europa.ec.fisheries.uvms.config.message.event.MessageRecievedEvent;
+import eu.europa.ec.fisheries.uvms.config.message.event.ConfigMessageRecievedEvent;
 
 @Local
 public interface EventService {
 
-    public void getData(@Observes @MessageRecievedEvent EventMessage message);
+    void getData(@Observes @ConfigMessageRecievedEvent EventMessage message);
 
 }

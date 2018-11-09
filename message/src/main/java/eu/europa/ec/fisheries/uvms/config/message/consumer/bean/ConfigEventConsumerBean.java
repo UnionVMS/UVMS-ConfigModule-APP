@@ -15,7 +15,7 @@ import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.context.MappedDiagnosticContext;
 import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
-import eu.europa.ec.fisheries.uvms.config.message.event.MessageRecievedEvent;
+import eu.europa.ec.fisheries.uvms.config.message.event.ConfigMessageRecievedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,7 @@ public class ConfigEventConsumerBean implements MessageListener {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigEventConsumerBean.class);
 
     @Inject
-    @MessageRecievedEvent
+    @ConfigMessageRecievedEvent
     private Event<EventMessage> messageRecievedEvent;
 
     @Inject
@@ -51,7 +51,6 @@ public class ConfigEventConsumerBean implements MessageListener {
         TextMessage textMessage = (TextMessage) message;
         MappedDiagnosticContext.addMessagePropertiesToThreadMappedDiagnosticContext(textMessage);
         try {
-            LOG.info("Message received in config");
             messageRecievedEvent.fire(new EventMessage(textMessage));
         } catch (NullPointerException e) {
             LOG.error("[ Error when receiving message in config: ]", e);
