@@ -27,7 +27,7 @@
         <sl4j.version>1.7.25</sl4j.version>
         <logback.version>1.2.3</logback.version>
         <logback.core.version>1.2.3</logback.core.version>
-        <usm4uvms.version>4.0.13</usm4uvms.version>
+        <usm4uvms.version>4.0.14-WILDFLY14-JEE8</usm4uvms.version>
         <audit.model.version>4.0.10</audit.model.version>
         <uvms.common.version>3.0.29</uvms.common.version>
         <javaee.version>8.0</javaee.version>
