@@ -15,23 +15,21 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ejb.Singleton;
-
-@Singleton
 public class ModuleAvailabilityBean {
 
     private static final int FIVE_MINUTES = 300000;
-    private Map<String, Date> timestampByModule;
 
-    public ModuleAvailabilityBean() {
-        timestampByModule = new HashMap<>();
+    private static Map<String, Date> timestampByModule = new HashMap<>();
+
+    private ModuleAvailabilityBean() { }
+
+    public static void setTimestamp(String moduleName, Date timestamp) {
+        synchronized (timestampByModule){
+            timestampByModule.put(moduleName, timestamp);
+        }
     }
 
-    public void setTimestamp(String moduleName, Date timestamp) {
-        timestampByModule.put(moduleName, timestamp);
-    }
-
-    public Map<String, Date> getTimestamps() {
+    public static Map<String, Date> getTimestamps() {
         return new HashMap<>(timestampByModule);
     }
 

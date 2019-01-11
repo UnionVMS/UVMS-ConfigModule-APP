@@ -25,15 +25,15 @@ import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMapperException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.config.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Stateless
 public class ConfigServiceBean implements ConfigService {
@@ -42,9 +42,6 @@ public class ConfigServiceBean implements ConfigService {
 
     @EJB
     private ConfigMessageProducerBean producer;
-
-    @Inject
-    private ModuleAvailabilityBean moduleAvailability;
     
     @EJB
     private ConfigDomainModel configModel;
@@ -166,12 +163,12 @@ public class ConfigServiceBean implements ConfigService {
 
     @Override
     public void setModuleTimestamp(String moduleName, Date timestamp) {
-        moduleAvailability.setTimestamp(moduleName, timestamp); 
+        ModuleAvailabilityBean.setTimestamp(moduleName, timestamp);
     }
 
     @Override
     public Map<String, Date> getModuleTimestamps() {
-        return moduleAvailability.getTimestamps();
+        return ModuleAvailabilityBean.getTimestamps();
     }
 
     @Override

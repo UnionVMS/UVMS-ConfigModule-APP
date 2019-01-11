@@ -11,13 +11,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.rest.mapper;
 
+import eu.europa.ec.fisheries.uvms.config.rest.entity.ModuleStatus;
+import eu.europa.ec.fisheries.uvms.config.service.bean.ModuleAvailabilityBean;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import eu.europa.ec.fisheries.uvms.config.rest.entity.ModuleStatus;
-import eu.europa.ec.fisheries.uvms.config.service.bean.ModuleAvailabilityBean;
 
 public class ModuleStatusMapper {
 

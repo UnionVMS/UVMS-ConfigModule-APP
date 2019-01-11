@@ -36,15 +36,12 @@ public class ConfigStartupAction {
     @PostConstruct
     protected void sendConfigDeployedMessage() {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String message = ModuleRequestMapper.toConfigDeployedMessage();
-                    producer.sendConfigDeployedMessage(message);
-                } catch (Exception e) {
-                    LOG.error("[ Error when sending config deployed message on topic. ] {}", e.getMessage());
-                }
+        executorService.submit(() -> {
+            try {
+                String message = ModuleRequestMapper.toConfigDeployedMessage();
+                producer.sendConfigDeployedMessage(message);
+            } catch (Exception e) {
+                LOG.error("[ Error when sending config deployed message on topic. ] {}", e.getMessage());
             }
         });
     }
