@@ -20,7 +20,7 @@ import javax.ejb.Stateless;
 public class ConfigTopicProducer extends AbstractTopicProducer {
 
     @Override
-    protected String getDestinationName() {
+    public String getDestinationName() {
         return MessageConstants.CONFIG_STATUS_TOPIC;
     }
 }
