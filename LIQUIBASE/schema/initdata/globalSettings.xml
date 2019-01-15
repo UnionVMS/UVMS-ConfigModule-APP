@@ -143,4 +143,23 @@
         </rollback>
     </changeSet>
 
+    <changeSet author="stihft" id="add_global_setting_flux_nodes">
+        <insert tableName="settings">
+            <column name="setting_id" value="12"/>
+            <column name="setting_key" value="flux_nodes"/>
+            <column name="setting_value" value="BGR:EAFA,CPV,CYP:ERS,CYP:FMC,DEU,DNK,ESP,EST,FIN,FRA:DEVELOPPEMENT-DURABLE:DAM,GBR,GRC:FA,HRV:FISHERIES,IRL:AGRI,IRL:FMC:VMS,ITA,ITA:FMC:GUARDIACOSTIERA:ROME,LTU,LVA:ZM,NLD:VIR,POL,PRT:DGRM:MAIN,SWE,XFA,XMO,XNW"/>
+            <column name="global" value="1"/>
+            <column name="setting_description" value="A list of FLUX nodes"/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+        <rollback>
+            <delete tableName="settings">
+                <where>
+                    global = true and setting_key in ('flux_nodes')
+                </where>
+            </delete>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>
