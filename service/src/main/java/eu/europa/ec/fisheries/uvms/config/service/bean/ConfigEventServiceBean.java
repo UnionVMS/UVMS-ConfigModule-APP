@@ -16,9 +16,9 @@ import eu.europa.ec.fisheries.schema.config.types.v1.ConfigFault;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
+import eu.europa.ec.fisheries.uvms.config.message.event.ConfigMessageRecievedEvent;
 import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
-import eu.europa.ec.fisheries.uvms.config.message.event.ConfigMessageRecievedEvent;
 import eu.europa.ec.fisheries.uvms.config.message.producer.bean.ConfigMessageProducerBean;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMapperException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
@@ -97,18 +97,20 @@ public class ConfigEventServiceBean implements EventService {
                 case RESET:
                     ResetSettingRequest resetRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, ResetSettingRequest.class);
                     SettingType deletedSetting;
+                    String module = resetRequest.getSetting().getModule();
                     if (resetRequest.getSetting().getId() != null) {
                         deletedSetting = configService.delete(resetRequest.getSetting().getId(), baseRequest.getUsername());
                     } else {
-                        deletedSetting = configService.delete(resetRequest.getSetting().getKey(), resetRequest.getSetting().getModule(), baseRequest.getUsername());
+                        deletedSetting = configService.delete(resetRequest.getSetting().getKey(), module, baseRequest.getUsername());
                     }
                     responseMessage = ModuleResponseMapper.toSingleSettingResponse(deletedSetting);
                     configMessageProducer.sendResponseMessageToSender(jmsMessage, responseMessage);
-                    LOG.info("[END] ResetSettingResponse sent back to module..");
+                    LOG.info("[END] ResetSettingResponse sent back to module [{}]", module);
                     break;
                 case PING:
                     PingRequest pingRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, PingRequest.class);
                     configService.setModuleTimestamp(pingRequest.getModuleName(), new Date(jmsMessage.getJMSTimestamp()));
+                    LOG.info("[PING] Pinging module {}", pingRequest.getModuleName());
                     break;
                 case LIST:
                     ListSettingsRequest listRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, ListSettingsRequest.class);
@@ -125,7 +127,7 @@ public class ConfigEventServiceBean implements EventService {
                     break;
             }
         } catch (MessageException | ModelMapperException | ServiceException | JMSException e) {
-            LOG.error("[ERROR] Error when receiving  config request. {}", e.getMessage());
+            LOG.error("[ERROR] Error when receiving  config request. {} MESSAGE : [{}]", e.getMessage(), jmsMessage);
             errorEvent.fire(new EventMessage(jmsMessage, createFault(e.getMessage())));
         }
     }

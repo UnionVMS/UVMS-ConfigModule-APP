@@ -23,12 +23,12 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 @Local
 public interface ConfigMapper {
 
-    public Setting toEntity(SettingType model, String username) throws DaoMappingException;
+    Setting toEntity(SettingType model, String username) throws DaoMappingException;
 
-    public Setting toEntity(Setting entity, SettingType model, String username) throws DaoMappingException;
+    Setting toEntity(Setting entity, SettingType model, String username) throws DaoMappingException;
 
-    public SettingType toModel(Setting entity) throws DaoMappingException;
+    SettingType toModel(Setting entity) throws DaoMappingException;
     
-    public List<SettingType> toModel(List<Setting> entities) throws DaoMappingException;
+    List<SettingType> toModel(List<Setting> entities) throws DaoMappingException;
 
 }
