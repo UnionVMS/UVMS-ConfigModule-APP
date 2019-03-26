@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Message;
@@ -49,12 +47,11 @@ public class ConfigEventConsumerBean implements MessageListener {
     private Event<EventMessage> errorEvent;
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
         TextMessage textMessage = (TextMessage) message;
         MappedDiagnosticContext.addMessagePropertiesToThreadMappedDiagnosticContext(textMessage);
         try {
-            LOG.info("Message received in config");
+            LOG.trace("Message received in config");
             messageRecievedEvent.fire(new EventMessage(textMessage));
         } catch (NullPointerException e) {
             LOG.error("[ Error when receiving message in config: ]", e);
