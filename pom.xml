@@ -9,7 +9,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
     <artifactId>config</artifactId>
-    <version>4.0.14</version>
+    <version>4.0.15-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Maven projekt-archetype for UnionVms modules</description>
 
@@ -94,7 +94,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/UnionVMS/UVMS-ConfigModule-APP.git</connection>
-        <tag>config-4.0.14</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <profiles>
