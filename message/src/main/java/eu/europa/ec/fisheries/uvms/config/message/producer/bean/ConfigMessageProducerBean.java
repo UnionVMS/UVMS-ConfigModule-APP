@@ -11,8 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.message.producer.bean;
 
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.config.message.consumer.bean.ConfigMessageConsumerBean;
 import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
@@ -28,6 +26,8 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
 import javax.jms.DeliveryMode;
+import javax.jms.Destination;
+import javax.jms.JMSException;
 
 @Stateless
 @LocalBean
@@ -44,26 +44,25 @@ public class ConfigMessageProducerBean extends AbstractProducer {
     @EJB
     private ConfigTopicProducer configTopicProducer;
 
-    public String sendAuditMessage(String text) throws eu.europa.ec.fisheries.uvms.commons.message.api.MessageException {
+    public String sendAuditMessage(String text) throws JMSException {
         return auditProducer.sendModuleMessage(text, configConsumer.getDestination());
     }
 
-    public void sendConfigDeployedMessage(String text) throws eu.europa.ec.fisheries.uvms.commons.message.api.MessageException {
+    public void sendConfigDeployedMessage(String text) throws JMSException {
         configTopicProducer.sendEventBusMessage(text, StringUtils.EMPTY);
     }
 
-    public void sendModuleErrorMessage(@Observes @ErrorEvent EventMessage eventMessage) throws MessageException {
+    public void sendModuleErrorMessage(@Observes @ErrorEvent EventMessage eventMessage) {
         try {
             String faultString = JAXBMarshaller.marshallJaxBObjectToString(eventMessage.getFault());
             this.sendResponseMessageToSender(eventMessage.getJmsMessage(), faultString, 60000, DeliveryMode.NON_PERSISTENT);
-        } catch (ModelMarshallException | MessageException e) {
-            LOG.error("[ Error when sending module error message. ] {}", e.getMessage());
-            throw new MessageException("[ Error when sending module error message. ]", e);
+        } catch (ModelMarshallException | JMSException e) {
+            LOG.error("Error when sending module error message.", e);
         }
     }
 
     @Override
-    public String getDestinationName() {
-        return MessageConstants.QUEUE_AUDIT_EVENT;
+    public Destination getDestination() {
+        return null;
     }
 }

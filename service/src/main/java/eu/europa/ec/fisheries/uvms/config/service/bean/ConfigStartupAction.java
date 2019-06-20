@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
-import javax.ejb.DependsOn;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -25,13 +24,12 @@ import org.slf4j.LoggerFactory;
 
 @Singleton
 @Startup
-@DependsOn(value = { "ConfigMessageProducerBean" })
 public class ConfigStartupAction {
 
     @EJB
     private ConfigMessageProducerBean producer;
 
-    final static Logger LOG = LoggerFactory.getLogger(ConfigStartupAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigStartupAction.class);
 
     @PostConstruct
     protected void sendConfigDeployedMessage() {
