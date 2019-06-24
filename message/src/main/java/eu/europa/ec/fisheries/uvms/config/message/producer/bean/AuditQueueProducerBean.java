@@ -12,15 +12,21 @@ package eu.europa.ec.fisheries.uvms.config.message.producer.bean;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.jms.Destination;
+import javax.jms.Queue;
 
 @Stateless
 @LocalBean
 public class AuditQueueProducerBean extends AbstractProducer {
 
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_AUDIT_EVENT)
+    private Queue destination;
+
     @Override
-    public String getDestinationName() {
-        return MessageConstants.QUEUE_AUDIT_EVENT;
+    public Destination getDestination() {
+        return destination;
     }
 }

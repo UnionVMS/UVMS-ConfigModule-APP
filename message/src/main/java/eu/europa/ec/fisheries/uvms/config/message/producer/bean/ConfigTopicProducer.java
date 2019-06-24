@@ -12,15 +12,21 @@ package eu.europa.ec.fisheries.uvms.config.message.producer.bean;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractTopicProducer;
+import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.jms.Destination;
+import javax.jms.Topic;
 
 @Stateless
 @LocalBean
 public class ConfigTopicProducer extends AbstractTopicProducer {
 
+    @Resource(mappedName =  "java:/" + MessageConstants.CONFIG_STATUS_TOPIC)
+    private Topic destination;
+
     @Override
-    protected String getDestinationName() {
-        return MessageConstants.CONFIG_STATUS_TOPIC;
+    public Destination getDestination() {
+        return destination;
     }
 }

@@ -15,7 +15,6 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCatalogEntry;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.config.ConfigDomainModel;
 import eu.europa.ec.fisheries.uvms.config.message.producer.bean.ConfigMessageProducerBean;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditObjectTypeEnum;
@@ -32,13 +31,14 @@ import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Stateless
 public class ConfigServiceBean implements ConfigService {
 
-    final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
 
     @EJB
     private ConfigMessageProducerBean producer;
@@ -57,7 +57,7 @@ public class ConfigServiceBean implements ConfigService {
             sendAuditMessage(AuditOperationEnum.CREATE, createdSetting, username);
             return createdSetting;
         }
-        catch (ModelMapperException | eu.europa.ec.fisheries.uvms.commons.message.api.MessageException | ConfigModelException e) {
+        catch (ModelMapperException | JMSException | ConfigModelException e) {
             LOG.error("[ Error when creating setting. {} ] {}",setting, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
@@ -98,7 +98,7 @@ public class ConfigServiceBean implements ConfigService {
             sendAuditMessage(AuditOperationEnum.UPDATE, updatedSetting, username);
             return updatedSetting;
         }
-        catch (ModelMapperException | MessageException | ConfigModelException e) {
+        catch (ModelMapperException | JMSException | ConfigModelException e) {
             LOG.error("[ Error when updating setting. {} {} {}] {}",settingId,setting,username, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
@@ -112,7 +112,7 @@ public class ConfigServiceBean implements ConfigService {
             sendAuditMessage(AuditOperationEnum.DELETE, deletedSetting, username);
             return deletedSetting;
         }
-        catch (ModelMapperException | MessageException | ConfigModelException ex) {
+        catch (ModelMapperException | JMSException | ConfigModelException ex) {
             LOG.error("[ Error when deleting setting. {} {} ] {}",settingId,username, ex.getMessage());
             throw new ServiceException(ex.getMessage());
         }
@@ -126,7 +126,7 @@ public class ConfigServiceBean implements ConfigService {
             sendAuditMessage(AuditOperationEnum.DELETE, deletedSetting, username);
             return deletedSetting;
         }
-        catch (ModelMapperException | MessageException | ConfigModelException ex) {
+        catch (ModelMapperException | JMSException | ConfigModelException ex) {
             LOG.error("[ Error when deleting setting. {} {} {} ] {}",settingKey,moduleName,username, ex.getMessage());
             throw new ServiceException(ex.getMessage());
         }
@@ -199,7 +199,7 @@ public class ConfigServiceBean implements ConfigService {
             String message = AuditLogMapper.mapToAuditLog(AuditObjectTypeEnum.SETTING.getValue(), operation.getValue(), affectedObject, userName);
             producer.sendAuditMessage(message);
         }
-        catch (AuditModelMarshallException | MessageException e) {
+        catch (AuditModelMarshallException | JMSException e) {
             LOG.error("[ Error when sending message to Audit. {} {} {} ] {}",operation,setting,userName, e.getMessage());
         }
     }

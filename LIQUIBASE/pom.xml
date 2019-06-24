@@ -97,6 +97,7 @@
 						<version>3.5.3</version>
 						<configuration>
 							<url>${db.docker.url}</url>
+							<changeLogFile>${db.changeLogFile}</changeLogFile>
 							<migrationSqlOutputFile>${project.build.directory}/full-update.sql</migrationSqlOutputFile>
 							<outputFileEncoding>UTF-8</outputFileEncoding>
 						</configuration>

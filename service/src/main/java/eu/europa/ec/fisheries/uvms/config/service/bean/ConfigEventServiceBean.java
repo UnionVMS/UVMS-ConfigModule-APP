@@ -21,7 +21,6 @@ import eu.europa.ec.fisheries.schema.config.module.v1.SetSettingRequest;
 import eu.europa.ec.fisheries.schema.config.types.v1.ConfigFault;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.config.message.event.MessageRecievedEvent;
@@ -50,7 +49,7 @@ import org.slf4j.LoggerFactory;
 @Stateless
 public class ConfigEventServiceBean implements EventService {
 
-    final static Logger LOG = LoggerFactory.getLogger(ConfigEventServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigEventServiceBean.class);
 
     @EJB
     private ConfigMessageProducerBean configMessageProducer;
@@ -124,7 +123,7 @@ public class ConfigEventServiceBean implements EventService {
                 default:
                     break;
             }
-        } catch (MessageException | ModelMapperException | ServiceException | JMSException e) {
+        } catch (ModelMapperException | ServiceException | JMSException e) {
             LOG.error("[ERROR] Error when receiving  config request. {}", e.getMessage());
             errorEvent.fire(new EventMessage(jmsMessage, createFault(e.getMessage())));
         }

@@ -36,7 +36,7 @@ import javax.jms.TextMessage;
 })
 public class ConfigEventConsumerBean implements MessageListener {
 
-    final static Logger LOG = LoggerFactory.getLogger(ConfigEventConsumerBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigEventConsumerBean.class);
 
     @Inject
     @MessageRecievedEvent
