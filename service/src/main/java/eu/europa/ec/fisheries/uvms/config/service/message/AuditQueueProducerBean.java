@@ -8,22 +8,23 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
 
 */
-package eu.europa.ec.fisheries.uvms.config.message.producer.bean;
+package eu.europa.ec.fisheries.uvms.config.service.message;
 
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractTopicProducer;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.jms.Destination;
-import javax.jms.Topic;
+import javax.jms.Queue;
 
 @Stateless
 @LocalBean
-public class ConfigTopicProducer extends AbstractTopicProducer {
+public class AuditQueueProducerBean extends AbstractProducer {
 
-    @Resource(mappedName =  "java:/" + MessageConstants.CONFIG_STATUS_TOPIC)
-    private Topic destination;
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_AUDIT_EVENT)
+    private Queue destination;
 
     @Override
     public Destination getDestination() {

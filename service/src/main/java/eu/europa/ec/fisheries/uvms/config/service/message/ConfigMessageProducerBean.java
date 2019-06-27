@@ -9,12 +9,9 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.config.message.producer.bean;
+package eu.europa.ec.fisheries.uvms.config.service.message;
 
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
-import eu.europa.ec.fisheries.uvms.config.message.consumer.bean.ConfigMessageConsumerBean;
-import eu.europa.ec.fisheries.uvms.config.message.event.ErrorEvent;
-import eu.europa.ec.fisheries.uvms.config.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
 import org.apache.commons.lang3.StringUtils;
@@ -24,10 +21,10 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.enterprise.event.Observes;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.TextMessage;
 
 @Stateless
 @LocalBean
@@ -52,10 +49,10 @@ public class ConfigMessageProducerBean extends AbstractProducer {
         configTopicProducer.sendEventBusMessage(text, StringUtils.EMPTY);
     }
 
-    public void sendModuleErrorMessage(@Observes @ErrorEvent EventMessage eventMessage) {
+    public void sendModuleErrorMessage(TextMessage message, String error) {
         try {
-            String faultString = JAXBMarshaller.marshallJaxBObjectToString(eventMessage.getFault());
-            this.sendResponseMessageToSender(eventMessage.getJmsMessage(), faultString, 60000, DeliveryMode.NON_PERSISTENT);
+            String faultString = JAXBMarshaller.marshallJaxBObjectToString(error);
+            this.sendResponseMessageToSender(message, faultString, 60000, DeliveryMode.NON_PERSISTENT);
         } catch (ModelMarshallException | JMSException e) {
             LOG.error("Error when sending module error message.", e);
         }

@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.service.bean;
 
-import eu.europa.ec.fisheries.uvms.config.message.producer.bean.ConfigMessageProducerBean;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,6 +18,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+
+import eu.europa.ec.fisheries.uvms.config.service.message.ConfigMessageProducerBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
