@@ -2,10 +2,11 @@
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="changelog/v0.1/db-changelog-createTables_0.1.xml">
 
-	<include file="schema/tables/modules.xml" />
-	<include file="schema/tables/settings.xml" />
-	<include file="schema/tables/parameter.xml" />
+	<include file="..\..\schema/tables/modules.xml" relativeToChangelogFile="true"/>
+	<include file="..\..\schema/tables/settings.xml" relativeToChangelogFile="true"/>
+	<include file="..\..\schema/tables/parameter.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
