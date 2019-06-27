@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 
 @ArquillianSuiteDeployment
-public abstract class BuildAuditServiceTestDeployment {
+public abstract class BuildConfigServiceTestDeployment {
 
-    final static Logger LOG = LoggerFactory.getLogger(BuildAuditServiceTestDeployment.class);
+    final static Logger LOG = LoggerFactory.getLogger(BuildConfigServiceTestDeployment.class);
 
     @Deployment(name = "configservice", order = 1)
     public static Archive<?> createDeployment() {

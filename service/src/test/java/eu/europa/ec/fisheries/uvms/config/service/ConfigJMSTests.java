@@ -23,7 +23,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class ConfigJMSTests extends BuildAuditServiceTestDeployment {
+public class ConfigJMSTests extends BuildConfigServiceTestDeployment {
 
     @Resource(mappedName = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
@@ -236,6 +236,8 @@ public class ConfigJMSTests extends BuildAuditServiceTestDeployment {
         SettingsListResponse listResponse = JAXBMarshaller.unmarshallTextMessage(listMessage, SettingsListResponse.class);
 
         assertEquals(14, listResponse.getSettings().size());    //created two, plus 13 global and then minus one
+
+        jmsHelper.
 
 
     }
