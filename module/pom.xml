@@ -28,10 +28,6 @@
                         </ejbModule>                   
                         <ejbModule>
                             <groupId>${project.groupId}</groupId>
-                            <artifactId>config-message</artifactId>
-                        </ejbModule>
-                        <ejbModule>
-                            <groupId>${project.groupId}</groupId>
                             <artifactId>config-service</artifactId>
                         </ejbModule>
                         <jarModule>
@@ -59,12 +55,6 @@
             <type>ejb</type>
         </dependency>
     
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>config-message</artifactId>
-            <version>${project.parent.version}</version>
-            <type>ejb</type>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>config-service</artifactId>

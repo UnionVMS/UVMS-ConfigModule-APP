@@ -9,18 +9,26 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.config.message.event;
+package eu.europa.ec.fisheries.uvms.config.service.message;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractConsumer;
 
-import javax.inject.Qualifier;
+import javax.annotation.Resource;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.jms.Destination;
+import javax.jms.Queue;
 
-@Qualifier
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
-public @interface ErrorEvent {
+@Stateless
+@LocalBean
+public class ConfigMessageConsumerBean extends AbstractConsumer {
 
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_CONFIG_RESPONSE)
+    private Queue destination;
+
+    @Override
+    public Destination getDestination() {
+        return destination;
+    }
 }

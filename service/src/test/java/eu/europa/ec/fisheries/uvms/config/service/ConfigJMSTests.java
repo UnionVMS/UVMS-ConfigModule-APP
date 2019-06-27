@@ -193,7 +193,7 @@ public class ConfigJMSTests extends BuildConfigServiceTestDeployment {
         }
         String xml = ModuleRequestMapper.toResetSettingRequest(setting);
 
-        TextMessage message = sendStringToConfigAndReturnResponse(xml, ConfigModuleMethod.SET);
+        TextMessage message = sendStringToConfigAndReturnResponse(xml, ConfigModuleMethod.RESET);
         SingleSettingResponse ssResponse = JAXBMarshaller.unmarshallTextMessage(message, SingleSettingResponse.class);
 
         assertNotNull(ssResponse.getSetting());
@@ -224,7 +224,7 @@ public class ConfigJMSTests extends BuildConfigServiceTestDeployment {
         setting.setId(null);
         String xml = ModuleRequestMapper.toResetSettingRequest(setting);
 
-        TextMessage message = sendStringToConfigAndReturnResponse(xml, ConfigModuleMethod.SET);
+        TextMessage message = sendStringToConfigAndReturnResponse(xml, ConfigModuleMethod.RESET);
         SingleSettingResponse ssResponse = JAXBMarshaller.unmarshallTextMessage(message, SingleSettingResponse.class);
 
         assertNotNull(ssResponse.getSetting());

@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCatalogEntry;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
 import eu.europa.ec.fisheries.uvms.config.ConfigDomainModel;
-import eu.europa.ec.fisheries.uvms.config.message.producer.bean.ConfigMessageProducerBean;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditObjectTypeEnum;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditOperationEnum;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
@@ -32,6 +31,8 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSException;
+
+import eu.europa.ec.fisheries.uvms.config.service.message.ConfigMessageProducerBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

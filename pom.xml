@@ -148,7 +148,6 @@
         <module>domain</module>
         <module>rest</module>
         <module>service</module>
-        <module>message</module>
         <module>module</module>
     </modules>
 </project>
