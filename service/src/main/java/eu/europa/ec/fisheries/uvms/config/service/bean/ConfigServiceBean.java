@@ -15,13 +15,12 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCatalogEntry;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
-import eu.europa.ec.fisheries.uvms.config.ConfigDomainModel;
+import eu.europa.ec.fisheries.uvms.config.bean.ConfigDomainModelBean;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditObjectTypeEnum;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditOperationEnum;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMapperException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.config.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Stateless
-public class ConfigServiceBean implements ConfigService {
+public class ConfigServiceBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
 
@@ -47,113 +46,57 @@ public class ConfigServiceBean implements ConfigService {
     @Inject
     private ModuleAvailabilityBean moduleAvailability;
     
-    @EJB
-    private ConfigDomainModel configModel;
+    @Inject
+    private ConfigDomainModelBean configModel;
 
-    @Override
-    public SettingType create(SettingType setting, String moduleName, String username) throws ServiceException {
-        try {
+    public SettingType create(SettingType setting, String moduleName, String username) {
             SettingType createdSetting = configModel.create(setting, moduleName, username);
             producer.sendConfigDeployedMessage(ModuleRequestMapper.toSetSettingEventRequest(createdSetting));
             sendAuditMessage(AuditOperationEnum.CREATE, createdSetting, username);
             return createdSetting;
-        }
-        catch (ModelMapperException | JMSException | ConfigModelException e) {
-            LOG.error("[ Error when creating setting. {} ] {}",setting, e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
     }
 
-    @Override
-    public List<SettingType> createAll(List<SettingType> settings, String moduleName, String username) throws ServiceException {
-        try {
-            List<SettingType> createdSettings = configModel.createAll(settings, moduleName, username);
-            for (SettingType createdSetting : createdSettings) {
-                sendAuditMessage(AuditOperationEnum.CREATE, createdSetting, username);
-            }
+    public List<SettingType> createAll(List<SettingType> settings, String moduleName, String username) {
+        List<SettingType> createdSettings = configModel.createAll(settings, moduleName, username);
+        for (SettingType createdSetting : createdSettings) {
+            sendAuditMessage(AuditOperationEnum.CREATE, createdSetting, username);
+        }
 
-            return createdSettings;
-        }
-        catch (ConfigModelException e) {
-            LOG.error("[ Error when creating settings. {} {} {}] {}",settings,moduleName,username, e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
+        return createdSettings;
     }
 
-    @Override
-    public SettingType getById(Long settingId) throws ServiceException {
-        try {
-            return configModel.get(settingId);
-        }
-        catch (ConfigModelException e) {
-            LOG.error("[ Error when getting setting by ID. {}] {}",settingId, e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
+    public SettingType getById(Long settingId) {
+        return configModel.get(settingId);
     }
 
-    @Override
-    public SettingType update(Long settingId, SettingType setting, String username) throws ServiceException {
-        try {
-            SettingType updatedSetting = configModel.update(setting, username);
-            producer.sendConfigDeployedMessage(ModuleRequestMapper.toSetSettingEventRequest(updatedSetting));
-            sendAuditMessage(AuditOperationEnum.UPDATE, updatedSetting, username);
-            return updatedSetting;
-        }
-        catch (ModelMapperException | JMSException | ConfigModelException e) {
-            LOG.error("[ Error when updating setting. {} {} {}] {}",settingId,setting,username, e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
+    public SettingType update(Long settingId, SettingType setting, String username) {
+        SettingType updatedSetting = configModel.update(setting, username);
+        producer.sendConfigDeployedMessage(ModuleRequestMapper.toSetSettingEventRequest(updatedSetting));
+        sendAuditMessage(AuditOperationEnum.UPDATE, updatedSetting, username);
+        return updatedSetting;
     }
 
-    @Override
-    public SettingType delete(Long settingId, String username) throws ServiceException {
-        try {
-            SettingType deletedSetting = configModel.delete(settingId);
-            producer.sendConfigDeployedMessage(ModuleRequestMapper.toResetSettingEventRequest(deletedSetting));
-            sendAuditMessage(AuditOperationEnum.DELETE, deletedSetting, username);
-            return deletedSetting;
-        }
-        catch (ModelMapperException | JMSException | ConfigModelException ex) {
-            LOG.error("[ Error when deleting setting. {} {} ] {}",settingId,username, ex.getMessage());
-            throw new ServiceException(ex.getMessage());
-        }
+    public SettingType delete(Long settingId, String username) {
+        SettingType deletedSetting = configModel.delete(settingId);
+        producer.sendConfigDeployedMessage(ModuleRequestMapper.toResetSettingEventRequest(deletedSetting));
+        sendAuditMessage(AuditOperationEnum.DELETE, deletedSetting, username);
+        return deletedSetting;
     }
 
-    @Override
-    public SettingType delete(String settingKey, String moduleName, String username) throws ServiceException {
-        try {
-            SettingType deletedSetting = configModel.delete(settingKey, moduleName);
-            producer.sendConfigDeployedMessage(ModuleRequestMapper.toResetSettingEventRequest(deletedSetting));
-            sendAuditMessage(AuditOperationEnum.DELETE, deletedSetting, username);
-            return deletedSetting;
-        }
-        catch (ModelMapperException | JMSException | ConfigModelException ex) {
-            LOG.error("[ Error when deleting setting. {} {} {} ] {}",settingKey,moduleName,username, ex.getMessage());
-            throw new ServiceException(ex.getMessage());
-        }
+    public SettingType delete(String settingKey, String moduleName, String username) {
+        SettingType deletedSetting = configModel.delete(settingKey, moduleName);
+        producer.sendConfigDeployedMessage(ModuleRequestMapper.toResetSettingEventRequest(deletedSetting));
+        sendAuditMessage(AuditOperationEnum.DELETE, deletedSetting, username);
+        return deletedSetting;
     }
     
-    @Override
-    public List<SettingType> getList(String moduleName) throws ServiceException {
-        try {
-            return configModel.getList(moduleName);
-        }
-        catch (ConfigModelException e) {
-            LOG.error("[ Error when getting settings list for module {}. ] {}", moduleName, e);
-            throw new ServiceException(e.getMessage());
-        }
+    public List<SettingType> getList(String moduleName) {
+        return configModel.getList(moduleName);
     }
 
-    @Override
-    public Map<String, List<SettingType>> getCatalog() throws ServiceException {
-        try {
-            List<SettingsCatalogEntry> catalog = configModel.getSettingsCatalog();
-            return getCatalogFromSettingCatalogResponse(catalog);
-        }
-        catch (ConfigModelException e) {
-            LOG.error("[ Error when getting settings catalog. ] {}", e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
+    public Map<String, List<SettingType>> getCatalog() {
+        List<SettingsCatalogEntry> catalog = configModel.getSettingsCatalog();
+        return getCatalogFromSettingCatalogResponse(catalog);
     }
 
     private Map<String, List<SettingType>> getCatalogFromSettingCatalogResponse(List<SettingsCatalogEntry> catalog) {
@@ -165,24 +108,16 @@ public class ConfigServiceBean implements ConfigService {
         return settingsByModule;
     }
 
-    @Override
     public void setModuleTimestamp(String moduleName, Date timestamp) {
         moduleAvailability.setTimestamp(moduleName, timestamp); 
     }
 
-    @Override
     public Map<String, Date> getModuleTimestamps() {
         return moduleAvailability.getTimestamps();
     }
 
-    @Override
-    public List<SettingType> getGlobalSettings() throws ServiceException {
-        try {
-            return configModel.getGlobalSettings();
-        } catch (ConfigModelException e) {
-            LOG.error("[ Error when getting global settings. ] {}", e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
+    public List<SettingType> getGlobalSettings() {
+        return configModel.getGlobalSettings();
     }
 
     private void sendAuditMessage(AuditOperationEnum operation, SettingType setting, String userName) {

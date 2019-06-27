@@ -45,15 +45,19 @@ public class ConfigMessageProducerBean extends AbstractProducer {
         return auditProducer.sendModuleMessage(text, configConsumer.getDestination());
     }
 
-    public void sendConfigDeployedMessage(String text) throws JMSException {
-        configTopicProducer.sendEventBusMessage(text, StringUtils.EMPTY);
+    public void sendConfigDeployedMessage(String text) {
+        try {
+            configTopicProducer.sendEventBusMessage(text, StringUtils.EMPTY);
+        }catch (JMSException e){
+            throw new RuntimeException(e);
+        }
     }
 
     public void sendModuleErrorMessage(TextMessage message, String error) {
         try {
             String faultString = JAXBMarshaller.marshallJaxBObjectToString(error);
             this.sendResponseMessageToSender(message, faultString, 60000, DeliveryMode.NON_PERSISTENT);
-        } catch (ModelMarshallException | JMSException e) {
+        } catch (Exception e) {
             LOG.error("Error when sending module error message.", e);
         }
     }

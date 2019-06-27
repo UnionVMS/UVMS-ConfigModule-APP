@@ -11,31 +11,30 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.dao.bean;
 
-import java.util.List;
+import eu.europa.ec.fisheries.uvms.config.constant.UvmsConstants;
+import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoException;
+import eu.europa.ec.fisheries.uvms.config.dao.exception.NoEntityFoundException;
+import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
+import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
-import eu.europa.ec.fisheries.uvms.config.dao.Dao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.europa.ec.fisheries.uvms.config.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.config.dao.ConfigDao;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoException;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.NoEntityFoundException;
-import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
-import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
+import java.util.List;
 
 @Stateless
-public class ConfigDaoBean extends Dao implements ConfigDao {
+public class ConfigDaoBean {
 
     final static Logger LOG = LoggerFactory.getLogger(ConfigDaoBean.class);
 
-    @Override
+    @PersistenceContext(unitName = "configPU")
+    protected EntityManager em;
+
+
     public Setting createSetting(Setting entity) throws DaoException {
         try {
             em.persist(entity);
@@ -46,120 +45,66 @@ public class ConfigDaoBean extends Dao implements ConfigDao {
         }
     }
 
-    @Override
-    public Setting getSettingById(Long id) throws DaoException {
-        try {
-            return em.find(Setting.class, id);
-        } catch (Exception e) {
-            LOG.error("[ Error when getting setting by ID. ] {}", e.getMessage());
-            throw new DaoException("[ Error when getting entity by ID. ] ", e);
-        }
+    public Setting getSettingById(Long id) {
+        return em.find(Setting.class, id);
     }
 
-    @Override
-    public Setting updateSetting(Setting entity) throws DaoException {
-        try {
-            em.merge(entity);
-            em.flush();
-            return entity;
-        } catch (Exception e) {
-            LOG.error("[ Error when updating entity. ] {}", e.getMessage());
-            throw new DaoException("[ Error when updating entity. ]", e);
-        }
+    public Setting updateSetting(Setting entity) {
+        em.merge(entity);
+        em.flush();
+        return entity;
     }
 
-    @Override
-    public Setting deleteSetting(Long id) throws DaoException {
-        try {
-            Setting setting = em.find(Setting.class, id);
-            em.remove(setting);
-            return setting;
-        } catch (NoResultException e) {
-            LOG.error("[ Error when deleting, could not find entity by ID. ] {}", e);
-            throw new NoEntityFoundException("[ Error when getting entity. by ID. ]", e);
-        }
+    public Setting deleteSetting(Long id) {
+        Setting setting = em.find(Setting.class, id);
+        em.remove(setting);
+        return setting;
     }
 
-    @Override
-    public List<Setting> getGlobalSettings() throws DaoException {
-        try {
-            TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_FIND_GLOBALS, Setting.class);
-            return query.getResultList();
-        } catch (Exception e) {
-            LOG.error("[ Error when getting global settings list. ] {}", e.getMessage());
-            throw new DaoException("[ Error when getting global settings list ] ", e);
-        }
+    public List<Setting> getGlobalSettings() {
+        TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_FIND_GLOBALS, Setting.class);
+        return query.getResultList();
     }
 
-    @Override
-    public Setting getGlobalSetting(String settingKey) throws DaoException {
-        try {
-            TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_FIND_GLOBAL_BY_KEY, Setting.class);
-            query.setParameter("key", settingKey);
-            List<Setting> settings = query.getResultList();
-            if (settings.isEmpty()) {
-                return null;
-            }
-
-            return settings.get(0);
-        } catch (Exception e) {
-            LOG.error("[ Error when getting global setting. ] {}", e.getMessage());
-            throw new DaoException("[ Error when getting global setting. ] ", e);
+    public Setting getGlobalSetting(String settingKey) {
+        TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_FIND_GLOBAL_BY_KEY, Setting.class);
+        query.setParameter("key", settingKey);
+        List<Setting> settings = query.getResultList();
+        if (settings.isEmpty()) {
+            return null;
         }
+
+        return settings.get(0);
     }
 
-    @Override
-    public Setting getSetting(String settingKey, String moduleName) throws DaoException {
-        try {
-            TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_FIND_BY_KEY_AND_MODULE, Setting.class);
-            query.setParameter("key", settingKey);
-            query.setParameter("moduleName", moduleName);
-            List<Setting> settings = query.getResultList();
-            if (settings.isEmpty()) {
-                return null;
-            }
-
-            return settings.get(0);
-        } catch (Exception e) {
-            LOG.error("[ Error when getting module setting. ] {}", e.getMessage());
-            throw new DaoException("[ Error when getting module setting. ] ", e);
+    public Setting getSetting(String settingKey, String moduleName) {
+        TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_FIND_BY_KEY_AND_MODULE, Setting.class);
+        query.setParameter("key", settingKey);
+        query.setParameter("moduleName", moduleName);
+        List<Setting> settings = query.getResultList();
+        if (settings.isEmpty()) {
+            return null;
         }
+
+        return settings.get(0);
     }
 
-    @Override
-    public Module getModuleByName(String moduleName) throws DaoException {
-        try {
-            TypedQuery<Module> query = em.createNamedQuery(UvmsConstants.MODULE_FIND_BY_NAME, Module.class);
-            query.setParameter("moduleName", moduleName);
-            List<Module> modules = query.getResultList();
-            return modules.isEmpty() ? null : modules.get(0);
-        } catch (Exception e) {
-            LOG.error("[ Error when getting module by name. ] {}", e.getMessage());
-            throw new DaoException("[ Error when getting module by name. ]", e);
-        }
+    public Module getModuleByName(String moduleName) {
+        TypedQuery<Module> query = em.createNamedQuery(UvmsConstants.MODULE_FIND_BY_NAME, Module.class);
+        query.setParameter("moduleName", moduleName);
+        List<Module> modules = query.getResultList();
+        return modules.isEmpty() ? null : modules.get(0);
     }
 
-    @Override
-    public Module createModule(String moduleName) throws DaoException {
-        try {
-            Module module = new Module();
-            module.setModuleName(moduleName);
-            em.persist(module);
-            return module;
-        } catch (Exception e) {
-            LOG.error("[ Error when creating module. ] {}", e.getMessage());
-            throw new DaoException("[ Error when creating module. ]", e);
-        }
+    public Module createModule(String moduleName){
+        Module module = new Module();
+        module.setModuleName(moduleName);
+        em.persist(module);
+        return module;
     }
 
-    @Override
-    public List<Module> getModules() throws DaoException {
-        try {
-            TypedQuery<Module> query = em.createNamedQuery(UvmsConstants.MODULE_LIST_ALL, Module.class);
-            return query.getResultList();
-        } catch (Exception e) {
-            LOG.error("[ Error when getting module names. ] {}", e.getMessage());
-            throw new DaoException("[ Error when getting module names. ]", e);
-        }
+    public List<Module> getModules() {
+        TypedQuery<Module> query = em.createNamedQuery(UvmsConstants.MODULE_LIST_ALL, Module.class);
+        return query.getResultList();
     }
 }

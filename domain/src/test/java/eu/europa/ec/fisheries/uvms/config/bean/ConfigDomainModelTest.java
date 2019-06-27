@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import eu.europa.ec.fisheries.uvms.config.MockData;
-import eu.europa.ec.fisheries.uvms.config.dao.ConfigDao;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
 import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapperBean;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;

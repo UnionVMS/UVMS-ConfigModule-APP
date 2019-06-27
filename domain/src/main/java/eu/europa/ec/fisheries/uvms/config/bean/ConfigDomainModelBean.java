@@ -19,54 +19,43 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import eu.europa.ec.fisheries.uvms.config.dao.bean.ConfigDaoBean;
+import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapperBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCatalogEntry;
-import eu.europa.ec.fisheries.uvms.config.ConfigDomainModel;
-import eu.europa.ec.fisheries.uvms.config.dao.ConfigDao;
 import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoException;
 import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoMappingException;
 import eu.europa.ec.fisheries.uvms.config.dao.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
-import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapper;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
 
 @Stateless
-public class ConfigDomainModelBean implements ConfigDomainModel {
+public class ConfigDomainModelBean {
 
     final static Logger LOG = LoggerFactory.getLogger(ConfigDomainModelBean.class);
 
     @EJB
-    ConfigDao dao;
+    ConfigDaoBean dao;
 
     @EJB
-    ConfigMapper mapper;
+    ConfigMapperBean mapper;
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public SettingType create(SettingType setting, String moduleName, String username) throws ConfigModelException {
-        try {
+    public SettingType create(SettingType setting, String moduleName, String username) {
             return createSetting(setting, getModule(moduleName), username);
-        }
-        catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when creating setting. {}] {}",setting, e.getMessage());
-            throw new ConfigModelException("Error when creating setting.", e);
-        }
     }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<SettingType> createAll(List<SettingType> settings, String moduleName, String username) throws ConfigModelException {
+    public List<SettingType> createAll(List<SettingType> settings, String moduleName, String username) {
         Module module = getModule(moduleName);
         List<SettingType> createdSettings = new ArrayList<>();
         for (SettingType setting : settings) {
             try {
                 createdSettings.add(createSetting(setting, module, username));
             }
-            catch (DaoException | DaoMappingException e) {
+            catch (Exception e) {
                 // If single setting could not be created, log error and skip to next setting.
                 LOG.error("[ Error when creating single setting: {} ] {}",settings, e.getMessage());
             }
@@ -75,146 +64,101 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
         return createdSettings;
     }
 
-    @Override
-    public SettingType get(Long settingId) throws ConfigModelException {
+    public SettingType get(Long settingId) {
         if (settingId == null) {
             LOG.error("[ ID is null, returning Exception. ]");
-            throw new InputArgumentException("ID is null", null);
+            throw new IllegalArgumentException("ID is null");
         }
-
-        try {
-            return mapper.toModel(dao.getSettingById(settingId));
-        }
-        catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when updating setting: {} ] {}",settingId, e.getMessage());
-            throw new ConfigModelException("[ Error when updating setting. ]", e);
-        }
+        return mapper.toModel(dao.getSettingById(settingId));
     }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public SettingType update(SettingType setting, String username) throws ConfigModelException, InputArgumentException {
+    public SettingType update(SettingType setting, String username) {
         if (setting == null) {
             LOG.error("[ Model is null, returning Exception ]");
-            throw new InputArgumentException("Model is null", null);
+            throw new IllegalArgumentException("Model is null");
         }
 
         if (setting.getId() == null) {
             LOG.error("[ ID of the model is null, returning Exception. ]");
-            throw new InputArgumentException("ID of the model is null", null);
+            throw new IllegalArgumentException("ID of the model is null");
         }
 
-        try {
-            Setting entity = dao.getSettingById(setting.getId());
-            entity = mapper.toEntity(entity, setting, username);
-            Setting updatedEntity = dao.updateSetting(entity);
-            return mapper.toModel(updatedEntity);
-        }
-        catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when updating setting: {} ] {}",setting, e.getMessage());
-            throw new ConfigModelException("[ Error when updating setting. ]", e);
-        }
+        Setting entity = dao.getSettingById(setting.getId());
+        entity = mapper.toEntity(entity, setting, username);
+        Setting updatedEntity = dao.updateSetting(entity);
+        return mapper.toModel(updatedEntity);
     }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public SettingType delete(Long settingId) throws ConfigModelException, InputArgumentException {
-        try {
-            if (settingId == null) {
-                LOG.error("[ ID is null, returning Exception. ]");
-                throw new InputArgumentException("ID is null", null);
-            }
+    public SettingType delete(Long settingId){
+        if (settingId == null) {
+            LOG.error("[ ID is null, returning Exception. ]");
+            throw new IllegalArgumentException("ID is null");
+        }
 
-            return mapper.toModel(dao.deleteSetting(settingId));
-        }
-        catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when deleting setting {} ] {}",settingId, e.getMessage());
-            throw new ConfigModelException("[ Error when deleting setting. ]", e);
-        }
+        return mapper.toModel(dao.deleteSetting(settingId));
     }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public SettingType delete(String settingKey, String moduleName) throws ConfigModelException {
-        try {
-            Setting setting = null;
-            if (moduleName == null) {
-                setting = dao.getGlobalSetting(settingKey);
-            }
-            else {
-                setting = dao.getSetting(settingKey, moduleName);
-            }
-
-            if (setting == null) {
-                throw new ConfigModelException("Could not find setting " + settingKey + " in module " + moduleName + ".");
-            }
-
-            Setting deletedSetting = dao.deleteSetting(setting.getId());
-            return mapper.toModel(deletedSetting);
+    public SettingType delete(String settingKey, String moduleName) {
+        Setting setting = null;
+        if (moduleName == null) {
+            setting = dao.getGlobalSetting(settingKey);
         }
-        catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when deleting setting. settingKey: {} moduleName: {} ] {}",settingKey,moduleName, e.getMessage());
-            throw new ConfigModelException("[ Error when deleting setting. ]");
+        else {
+            setting = dao.getSetting(settingKey, moduleName);
         }
+
+        if (setting == null) {
+            throw new IllegalArgumentException("Could not find setting " + settingKey + " in module " + moduleName + ".");
+        }
+
+        Setting deletedSetting = dao.deleteSetting(setting.getId());
+        return mapper.toModel(deletedSetting);
     }
 
-    @Override
-    public List<SettingType> getList(String moduleName) throws ConfigModelException, InputArgumentException {
+    public List<SettingType> getList(String moduleName) {
         if (moduleName == null) {
             LOG.error("[ No module name when getting list. ]");
-            throw new InputArgumentException("No module name.");
+            throw new IllegalArgumentException("No module name.");
         }
 
-        try {
-            Module module = dao.getModuleByName(moduleName);
-            if (module == null) {
-                return null;
-            }
+        Module module = dao.getModuleByName(moduleName);
+        if (module == null) {
+            return null;
+        }
 
-            ArrayList<Setting> settings = new ArrayList<>();
-            settings.addAll(module.getSettings());
-            settings.addAll(dao.getGlobalSettings());
-            return mapper.toModel(settings);
-        }
-        catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when getting settings list:{} ] {}",moduleName, e);
-            throw new ConfigModelException("[ Error when getting settings list. ]", e);
-        }
+        ArrayList<Setting> settings = new ArrayList<>();
+        settings.addAll(module.getSettings());
+        settings.addAll(dao.getGlobalSettings());
+        return mapper.toModel(settings);
     }
 
-    @Override
-    public List<SettingsCatalogEntry> getSettingsCatalog() throws ConfigModelException {
-        try {
-            List<SettingsCatalogEntry> catalog = new ArrayList<>();
-            List<SettingType> globalSettings = mapper.toModel(dao.getGlobalSettings());
-            for (Module module : dao.getModules()) {
-                SettingsCatalogEntry entry = new SettingsCatalogEntry();
-                entry.setModuleName(module.getModuleName());
-                entry.getSettings().addAll(mapper.toModel(module.getSettings()));
-                entry.getSettings().addAll(globalSettings);
-                catalog.add(entry);
-            }
+    public List<SettingsCatalogEntry> getSettingsCatalog() {
+        List<SettingsCatalogEntry> catalog = new ArrayList<>();
+        List<SettingType> globalSettings = mapper.toModel(dao.getGlobalSettings());
+        for (Module module : dao.getModules()) {
+            SettingsCatalogEntry entry = new SettingsCatalogEntry();
+            entry.setModuleName(module.getModuleName());
+            entry.getSettings().addAll(mapper.toModel(module.getSettings()));
+            entry.getSettings().addAll(globalSettings);
+            catalog.add(entry);
+        }
 
-            return catalog;
-        }
-        catch (DaoException | DaoMappingException e) {
-            throw new ConfigModelException("[ Error when listing settings catalog. ]", e);
-        }
+        return catalog;
     }
 
-    private static void validateSetting(SettingType setting, Module module) throws InputArgumentException {
+    private static void validateSetting(SettingType setting, Module module) {
         if (setting == null) {
             LOG.error("[ Setting is null, returning Exception ]");
-            throw new InputArgumentException("Setting is null", null);
+            throw new IllegalArgumentException("Setting is null", null);
         }
 
         if (!setting.isGlobal() && module == null) {
             LOG.error("[ Non-global setting has no module. ]");
-            throw new InputArgumentException("Non-global setting has no module.");
+            throw new IllegalArgumentException("Non-global setting has no module.");
         }
     }
 
-    private SettingType createSetting(SettingType setting, Module module, String username) throws InputArgumentException, DaoMappingException, DaoException {
+    private SettingType createSetting(SettingType setting, Module module, String username) {
         validateSetting(setting, module);
 
         if (module == null) {
@@ -225,29 +169,23 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
         }
     }
 
-    private Module getModule(String moduleName) throws ConfigModelException {
+    private Module getModule(String moduleName) {
         if (moduleName == null) {
             return null;
         }
 
-        try {
-            Module module = dao.getModuleByName(moduleName);
-            if (module == null) {
-                module = dao.createModule(moduleName);
-            }
+        Module module = dao.getModuleByName(moduleName);
+        if (module == null) {
+            module = dao.createModule(moduleName);
+        }
 
-            return module;
-        }
-        catch (DaoException e) {
-            LOG.error("[ Error when getting or creating module:{} ] {}",moduleName, e.getMessage());
-            throw new ConfigModelException("[ Could not create settings for module " + moduleName + ". ]");
-        }
+        return module;
     }
 
     /**
      * Creates a global setting.
      */
-    private SettingType createGlobalSetting(SettingType setting, String username) throws DaoMappingException, DaoException {
+    private SettingType createGlobalSetting(SettingType setting, String username) {
         Setting existingSetting = dao.getGlobalSetting(setting.getKey());
         if (existingSetting != null) {
             // Update existing global setting
@@ -283,15 +221,9 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
         return mapper.toModel(createdSetting);
     }
 
-    @Override
-    public List<SettingType> getGlobalSettings() throws ConfigModelException {
-        try {
-            List<Setting> globalSettings = dao.getGlobalSettings();
-            return mapper.toModel(globalSettings);
-        } catch (DaoException | DaoMappingException e) {
-            LOG.error("[ Error when getting global settings. ] {}", e.getMessage());
-            throw new ConfigModelException("[ Error when getting global settings. ]");
-        }
+    public List<SettingType> getGlobalSettings() {
+        List<Setting> globalSettings = dao.getGlobalSettings();
+        return mapper.toModel(globalSettings);
     }
 
 }

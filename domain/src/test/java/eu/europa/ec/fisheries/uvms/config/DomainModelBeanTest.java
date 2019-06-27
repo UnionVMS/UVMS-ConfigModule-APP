@@ -26,12 +26,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import eu.europa.ec.fisheries.uvms.config.bean.ConfigDomainModelBean;
-import eu.europa.ec.fisheries.uvms.config.dao.ConfigDao;
 import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoException;
 import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoMappingException;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
-import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapper;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 

@@ -31,7 +31,6 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCreateQuery;
 import eu.europa.ec.fisheries.uvms.config.rest.service.SettingsRestResource;
 import eu.europa.ec.fisheries.uvms.config.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.config.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.config.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.mockdata.MockData;
 
