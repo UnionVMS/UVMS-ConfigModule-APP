@@ -205,7 +205,6 @@ public class ConfigJMSTests extends BuildConfigServiceTestDeployment {
 
         assertEquals(14, listResponse.getSettings().size());    //created two, plus 13 global and then minus one
 
-
     }
 
     @Test
@@ -236,9 +235,6 @@ public class ConfigJMSTests extends BuildConfigServiceTestDeployment {
         SettingsListResponse listResponse = JAXBMarshaller.unmarshallTextMessage(listMessage, SettingsListResponse.class);
 
         assertEquals(14, listResponse.getSettings().size());    //created two, plus 13 global and then minus one
-
-        jmsHelper.
-
 
     }
 
