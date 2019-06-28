@@ -19,19 +19,17 @@ import eu.europa.ec.fisheries.uvms.config.bean.ConfigDomainModelBean;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditObjectTypeEnum;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditOperationEnum;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.jms.JMSException;
-
 import eu.europa.ec.fisheries.uvms.config.service.message.ConfigMessageProducerBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.jms.JMSException;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Stateless
 public class ConfigServiceBean {
@@ -67,29 +65,29 @@ public class ConfigServiceBean {
         return configModel.get(settingId);
     }
 
-    public SettingType update(Long settingId, SettingType setting, String username) {
+    public SettingType update(SettingType setting, String username) {
         SettingType updatedSetting = configModel.update(setting, username);
         producer.sendConfigDeployedMessage(ModuleRequestMapper.toSetSettingEventRequest(updatedSetting));
         sendAuditMessage(AuditOperationEnum.UPDATE, updatedSetting, username);
         return updatedSetting;
     }
 
-    public SettingType delete(Long settingId, String username) {
+    public SettingType reset(Long settingId, String username) {
         SettingType deletedSetting = configModel.delete(settingId);
         producer.sendConfigDeployedMessage(ModuleRequestMapper.toResetSettingEventRequest(deletedSetting));
         sendAuditMessage(AuditOperationEnum.DELETE, deletedSetting, username);
         return deletedSetting;
     }
 
-    public SettingType delete(String settingKey, String moduleName, String username) {
+    public SettingType reset(String settingKey, String moduleName, String username) {
         SettingType deletedSetting = configModel.delete(settingKey, moduleName);
         producer.sendConfigDeployedMessage(ModuleRequestMapper.toResetSettingEventRequest(deletedSetting));
         sendAuditMessage(AuditOperationEnum.DELETE, deletedSetting, username);
         return deletedSetting;
     }
     
-    public List<SettingType> getList(String moduleName) {
-        return configModel.getList(moduleName);
+    public List<SettingType> getListIncludingGlobal(String moduleName) {
+        return configModel.getListIncludingGlobal(moduleName);
     }
 
     public Map<String, List<SettingType>> getCatalog() {
@@ -106,11 +104,11 @@ public class ConfigServiceBean {
         return settingsByModule;
     }
 
-    public void setModuleTimestamp(String moduleName, Date timestamp) {
+    public void setModuleTimestamp(String moduleName, Instant timestamp) {
         moduleAvailability.setTimestamp(moduleName, timestamp); 
     }
 
-    public Map<String, Date> getModuleTimestamps() {
+    public Map<String, Instant> getModuleTimestamps() {
         return moduleAvailability.getTimestamps();
     }
 

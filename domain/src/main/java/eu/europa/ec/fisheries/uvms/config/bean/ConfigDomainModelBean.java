@@ -110,7 +110,7 @@ public class ConfigDomainModelBean {
         return mapper.toModel(deletedSetting);
     }
 
-    public List<SettingType> getList(String moduleName) {
+    public List<SettingType> getListIncludingGlobal(String moduleName) {
         if (moduleName == null) {
             LOG.error("[ No module name when getting list. ]");
             throw new IllegalArgumentException("No module name.");

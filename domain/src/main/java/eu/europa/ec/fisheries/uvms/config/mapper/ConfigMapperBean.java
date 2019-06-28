@@ -11,17 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.mapper;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.ejb.Stateless;
-
+import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
+import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
+import javax.ejb.Stateless;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class ConfigMapperBean {
@@ -32,7 +30,7 @@ public class ConfigMapperBean {
         entity.setKey(setting.getKey());
         entity.setValue(setting.getValue());
         entity.setDescription(setting.getDescription());
-        entity.setLastModified(new Date());
+        entity.setLastModified(Instant.now());
         entity.setUpdatedBy(username);
         return entity;
     }

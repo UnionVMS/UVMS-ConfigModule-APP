@@ -74,7 +74,7 @@ public class ConfigDomainModelTest {
         ConfigDomainModelBean configDomainModelBean = new ConfigDomainModelBean();
         configDomainModelBean.dao = mockDao;
         configDomainModelBean.mapper = new ConfigMapperBean();
-        List<SettingType> list = configDomainModelBean.getList("module1");
+        List<SettingType> list = configDomainModelBean.getListIncludingGlobal("module1");
 
         assertEquals(3, list.size());
     }

@@ -112,7 +112,7 @@ public class ConfigJMSTests extends BuildConfigServiceTestDeployment {
         jmsHelper.sendConfigMessage(xml, ConfigModuleMethod.PING.value());
         Thread.sleep(500);
 
-        assertTrue(moduleAvailability.getTimestamps().get(moduleName).toInstant().isAfter(timestamp));
+        assertTrue(moduleAvailability.getTimestamps().get(moduleName).isAfter(timestamp));
     }
 
     @Test

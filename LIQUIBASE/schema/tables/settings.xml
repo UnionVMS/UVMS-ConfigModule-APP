@@ -44,7 +44,7 @@
 
 	<changeSet author="marche" id="last modified column">
 		<addColumn tableName="settings">
-			<column name="setting_last_modified" type="DATETIME" remarks="Date and time of last modification."/>
+			<column name="setting_last_modified" type="timestamp with time zone" remarks="Date and time of last modification."/>
 		</addColumn>
 	</changeSet>
 
