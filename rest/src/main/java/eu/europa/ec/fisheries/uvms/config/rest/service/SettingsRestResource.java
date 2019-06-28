@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.rest.service;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -112,7 +112,7 @@ public class SettingsRestResource {
     public ResponseDto getByModuleName(@QueryParam("moduleName") String moduleName) {
         LOG.info("Get settings invoked in rest layer:{}",moduleName);
         try {
-            List<SettingType> settings = serviceLayer.getList(moduleName);
+            List<SettingType> settings = serviceLayer.getListIncludingGlobal(moduleName);
             if (settings == null) {
                 return new ResponseDto("No module called " + moduleName + " exists.", ResponseCode.ERROR);
             }
@@ -139,7 +139,7 @@ public class SettingsRestResource {
     public ResponseDto update(@PathParam(value = "id") Long settingId, final SettingType setting) {
         LOG.info("Update setting invoked in rest layer. {} {}",settingId,setting);
         try {
-            return new ResponseDto(serviceLayer.update(settingId, setting, request.getRemoteUser()), ResponseCode.OK);
+            return new ResponseDto(serviceLayer.update(setting, request.getRemoteUser()), ResponseCode.OK);
         }
         catch (Exception e) {
             LOG.error("[ Error when updating setting. {} {}] {} ",settingId,setting, e.getMessage(), e);
@@ -149,7 +149,7 @@ public class SettingsRestResource {
 
     /**
      * @summary Deletes a setting.
-     * @param id the ID of the setting to delete
+     * @param id the ID of the setting to reset
      * @return the deleted setting
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -159,7 +159,7 @@ public class SettingsRestResource {
     public ResponseDto delete(@PathParam(value = "id") Long id) {
         LOG.info("Delete setting invoked in rest layer. {}",id);
         try {
-            return new ResponseDto(serviceLayer.delete(id, request.getRemoteUser()), ResponseCode.OK);
+            return new ResponseDto(serviceLayer.reset(id, request.getRemoteUser()), ResponseCode.OK);
         }
         catch (Exception e) {
             LOG.error("[ Error when updating setting. {}] {} ",id, e.getMessage() , e);
@@ -193,7 +193,7 @@ public class SettingsRestResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/pings")
     public ResponseDto getPings() {
-        Map<String, Date> timestamps = serviceLayer.getModuleTimestamps();
+        Map<String, Instant> timestamps = serviceLayer.getModuleTimestamps();
         return new ResponseDto(ModuleStatusMapper.mapToModuleStatus(timestamps), ResponseCode.OK);
     }
 

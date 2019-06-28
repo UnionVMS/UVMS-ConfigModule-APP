@@ -11,26 +11,26 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.rest.mapper;
 
-import java.util.Date;
+import eu.europa.ec.fisheries.uvms.config.rest.entity.ModuleStatus;
+import eu.europa.ec.fisheries.uvms.config.service.bean.ModuleAvailabilityBean;
+
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import eu.europa.ec.fisheries.uvms.config.rest.entity.ModuleStatus;
-import eu.europa.ec.fisheries.uvms.config.service.bean.ModuleAvailabilityBean;
-
 public class ModuleStatusMapper {
 
-    public static Map<String, ModuleStatus> mapToModuleStatus(Map<String, Date> lastPings) {
+    public static Map<String, ModuleStatus> mapToModuleStatus(Map<String, Instant> lastPings) {
         Map<String, ModuleStatus> map = new HashMap<>();
-        for (Entry<String, Date> modulePingEntry : lastPings.entrySet()) {
+        for (Entry<String, Instant> modulePingEntry : lastPings.entrySet()) {
             map.put(modulePingEntry.getKey(), ModuleStatusMapper.mapToModuleStatus(modulePingEntry.getValue()));
         }
         
         return map;
     }
 
-    public static ModuleStatus mapToModuleStatus(Date lastPing) {
+    public static ModuleStatus mapToModuleStatus(Instant lastPing) {
         ModuleStatus status = new ModuleStatus();
         status.setLastPing(lastPing);
         status.setOnline(ModuleAvailabilityBean.isOnline(lastPing));

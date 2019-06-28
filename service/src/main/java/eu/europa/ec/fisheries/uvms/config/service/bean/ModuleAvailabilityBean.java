@@ -11,32 +11,32 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.service.bean;
 
-import java.util.Date;
+import javax.ejb.Singleton;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.ejb.Singleton;
 
 @Singleton
 public class ModuleAvailabilityBean {
 
     private static final int FIVE_MINUTES = 300000;
-    private Map<String, Date> timestampByModule;
+    private Map<String, Instant> timestampByModule;
 
     public ModuleAvailabilityBean() {
         timestampByModule = new HashMap<>();
     }
 
-    public void setTimestamp(String moduleName, Date timestamp) {
+    public void setTimestamp(String moduleName, Instant timestamp) {
         timestampByModule.put(moduleName, timestamp);
     }
 
-    public Map<String, Date> getTimestamps() {
+    public Map<String, Instant> getTimestamps() {
         return new HashMap<>(timestampByModule);
     }
 
-    public static boolean isOnline(Date timestamp) {
-        return new Date().getTime() - timestamp.getTime() < FIVE_MINUTES; 
+    public static boolean isOnline(Instant timestamp) {
+        return Duration.between(Instant.now(), timestamp).minusMillis(FIVE_MINUTES).isNegative();
     }
 
 }

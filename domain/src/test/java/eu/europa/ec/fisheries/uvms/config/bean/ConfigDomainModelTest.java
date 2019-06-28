@@ -23,7 +23,7 @@ import org.mockito.Mockito;
 
 import eu.europa.ec.fisheries.uvms.config.MockData;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
-import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapperBean;
+import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapper;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCatalogEntry;
@@ -48,7 +48,6 @@ public class ConfigDomainModelTest {
 
         ConfigDomainModelBean configDomainModelBean = new ConfigDomainModelBean();
         configDomainModelBean.dao = mockDao;
-        configDomainModelBean.mapper = new ConfigMapperBean();
 
         List<SettingsCatalogEntry> catalog = configDomainModelBean.getSettingsCatalog();
         assertEquals(1, catalog.size());
@@ -73,8 +72,7 @@ public class ConfigDomainModelTest {
 
         ConfigDomainModelBean configDomainModelBean = new ConfigDomainModelBean();
         configDomainModelBean.dao = mockDao;
-        configDomainModelBean.mapper = new ConfigMapperBean();
-        List<SettingType> list = configDomainModelBean.getList("module1");
+        List<SettingType> list = configDomainModelBean.getListIncludingGlobal("module1");
 
         assertEquals(3, list.size());
     }

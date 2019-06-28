@@ -11,14 +11,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.entity.component;
 
-import java.io.Serializable;
-import java.util.Date;
+import eu.europa.ec.fisheries.uvms.config.constant.UvmsConstants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import eu.europa.ec.fisheries.uvms.config.constant.UvmsConstants;
+import java.io.Serializable;
+import java.time.Instant;
 
 @Entity
 @Table(name = "settings")
@@ -50,7 +49,7 @@ public class Setting implements Serializable {
     private boolean global;
 
     @Column(name = "setting_last_modified")
-    private Date lastModified;
+    private Instant lastModified;
 
     @Size(max=60)
     @NotNull
@@ -104,11 +103,11 @@ public class Setting implements Serializable {
         this.global = global;
     }
 
-    public Date getLastModified() {
+    public Instant getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(Instant lastModified) {
         this.lastModified = lastModified;
     }
 

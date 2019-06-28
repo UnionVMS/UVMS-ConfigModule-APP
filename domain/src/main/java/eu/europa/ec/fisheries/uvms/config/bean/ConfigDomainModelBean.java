@@ -14,12 +14,11 @@ package eu.europa.ec.fisheries.uvms.config.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.europa.ec.fisheries.uvms.config.dao.bean.ConfigDaoBean;
-import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapperBean;
+import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,9 +34,6 @@ public class ConfigDomainModelBean {
 
     @Inject
     ConfigDaoBean dao;
-
-    @Inject
-    ConfigMapperBean mapper;
 
     public SettingType create(SettingType setting, String moduleName, String username) {
             return createSetting(setting, getModule(moduleName), username);
@@ -64,7 +60,7 @@ public class ConfigDomainModelBean {
             LOG.error("[ ID is null, returning Exception. ]");
             throw new IllegalArgumentException("ID is null");
         }
-        return mapper.toModel(dao.getSettingById(settingId));
+        return ConfigMapper.toModel(dao.getSettingById(settingId));
     }
 
     public SettingType update(SettingType setting, String username) {
@@ -79,9 +75,9 @@ public class ConfigDomainModelBean {
         }
 
         Setting entity = dao.getSettingById(setting.getId());
-        entity = mapper.toEntity(entity, setting, username);
+        entity = ConfigMapper.toEntity(entity, setting, username);
         Setting updatedEntity = dao.updateSetting(entity);
-        return mapper.toModel(updatedEntity);
+        return ConfigMapper.toModel(updatedEntity);
     }
 
     public SettingType delete(Long settingId){
@@ -90,7 +86,7 @@ public class ConfigDomainModelBean {
             throw new IllegalArgumentException("ID is null");
         }
 
-        return mapper.toModel(dao.deleteSetting(settingId));
+        return ConfigMapper.toModel(dao.deleteSetting(settingId));
     }
 
     public SettingType delete(String settingKey, String moduleName) {
@@ -107,10 +103,10 @@ public class ConfigDomainModelBean {
         }
 
         Setting deletedSetting = dao.deleteSetting(setting.getId());
-        return mapper.toModel(deletedSetting);
+        return ConfigMapper.toModel(deletedSetting);
     }
 
-    public List<SettingType> getList(String moduleName) {
+    public List<SettingType> getListIncludingGlobal(String moduleName) {
         if (moduleName == null) {
             LOG.error("[ No module name when getting list. ]");
             throw new IllegalArgumentException("No module name.");
@@ -124,16 +120,16 @@ public class ConfigDomainModelBean {
         ArrayList<Setting> settings = new ArrayList<>();
         settings.addAll(module.getSettings());
         settings.addAll(dao.getGlobalSettings());
-        return mapper.toModel(settings);
+        return ConfigMapper.toModel(settings);
     }
 
     public List<SettingsCatalogEntry> getSettingsCatalog() {
         List<SettingsCatalogEntry> catalog = new ArrayList<>();
-        List<SettingType> globalSettings = mapper.toModel(dao.getGlobalSettings());
+        List<SettingType> globalSettings = ConfigMapper.toModel(dao.getGlobalSettings());
         for (Module module : dao.getModules()) {
             SettingsCatalogEntry entry = new SettingsCatalogEntry();
             entry.setModuleName(module.getModuleName());
-            entry.getSettings().addAll(mapper.toModel(module.getSettings()));
+            entry.getSettings().addAll(ConfigMapper.toModel(module.getSettings()));
             entry.getSettings().addAll(globalSettings);
             catalog.add(entry);
         }
@@ -184,17 +180,17 @@ public class ConfigDomainModelBean {
         Setting existingSetting = dao.getGlobalSetting(setting.getKey());
         if (existingSetting != null) {
             // Update existing global setting
-            Setting updatedSetting = mapper.toEntity(existingSetting, setting, username);
-            return mapper.toModel(updatedSetting);
+            Setting updatedSetting = ConfigMapper.toEntity(existingSetting, setting, username);
+            return ConfigMapper.toModel(updatedSetting);
         }
 
         // With no module available, setting must be global.
         setting.setGlobal(true);
 
         // Create new global setting
-        Setting entity = mapper.toEntity(setting, username);
+        Setting entity = ConfigMapper.toEntity(setting, username);
         Setting createdSetting = dao.createSetting(entity);
-        return mapper.toModel(createdSetting);
+        return ConfigMapper.toModel(createdSetting);
     }
 
     /**
@@ -204,21 +200,21 @@ public class ConfigDomainModelBean {
         Setting existingSetting = dao.getSetting(setting.getKey(), module.getModuleName());
         if (existingSetting != null) {
             // Update existing setting
-            Setting updatedSetting = mapper.toEntity(existingSetting, setting, username);
-            return mapper.toModel(updatedSetting);
+            Setting updatedSetting = ConfigMapper.toEntity(existingSetting, setting, username);
+            return ConfigMapper.toModel(updatedSetting);
         }
 
         // Create new setting
-        Setting entity = mapper.toEntity(setting, username);
+        Setting entity = ConfigMapper.toEntity(setting, username);
         Setting createdSetting = dao.createSetting(entity);
         createdSetting.setModule(module);
         module.getSettings().add(createdSetting);
-        return mapper.toModel(createdSetting);
+        return ConfigMapper.toModel(createdSetting);
     }
 
     public List<SettingType> getGlobalSettings() {
         List<Setting> globalSettings = dao.getGlobalSettings();
-        return mapper.toModel(globalSettings);
+        return ConfigMapper.toModel(globalSettings);
     }
 
 }

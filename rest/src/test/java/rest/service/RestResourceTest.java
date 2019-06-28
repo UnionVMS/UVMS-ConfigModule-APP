@@ -91,7 +91,7 @@ public class RestResourceTest {
      */
     @Test
     public void testGetVesselList() {
-        doReturn(DTO_LIST).when(serviceLayer).getList("apa");
+        doReturn(DTO_LIST).when(serviceLayer).getListIncludingGlobal("apa");
         ResponseDto result = settingsRestResource.getByModuleName("apa");
         assertEquals(SUCCESS_RESULT_LIST.toString(), result.toString());
     }
@@ -164,7 +164,7 @@ public class RestResourceTest {
     public void testUpdateVessel() {
         doReturn("testUsername").when(request).getRemoteUser();
         ResponseDto result = settingsRestResource.update(1L, DTO);
-        Mockito.verify(serviceLayer).update(1L, DTO, "testUsername");
+        Mockito.verify(serviceLayer).update(DTO, "testUsername");
         assertEquals(SUCCESS_RESULT.toString(), result.toString());
     }
 

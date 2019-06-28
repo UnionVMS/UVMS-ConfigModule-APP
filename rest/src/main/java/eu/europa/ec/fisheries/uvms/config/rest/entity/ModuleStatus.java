@@ -11,13 +11,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.rest.entity;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class ModuleStatus {
 
     private boolean online;
     
-    private Date lastPing;
+    private Instant lastPing;
 
     public boolean isOnline() {
         return online;
@@ -27,11 +27,11 @@ public class ModuleStatus {
         this.online = online;
     }
 
-    public Date getLastPing() {
+    public Instant getLastPing() {
         return lastPing;
     }
 
-    public void setLastPing(Date lastPing) {
+    public void setLastPing(Instant lastPing) {
         this.lastPing = lastPing;
     }
     

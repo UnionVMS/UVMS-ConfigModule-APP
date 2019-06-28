@@ -29,7 +29,7 @@ public class MapperTest {
 
 
     @InjectMocks
-    private ConfigMapperBean mapper;
+    private ConfigMapper mapper;
 
     @Before
     public void setUp() {

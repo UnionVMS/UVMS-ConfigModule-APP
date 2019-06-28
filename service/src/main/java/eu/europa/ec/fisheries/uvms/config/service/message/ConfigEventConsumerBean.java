@@ -23,14 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.ActivationConfigProperty;
-import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @MessageDriven(mappedName = MessageConstants.QUEUE_CONFIG, activationConfig = {
@@ -70,7 +69,7 @@ public class ConfigEventConsumerBean implements MessageListener {
                 case PULL:
                     PullSettingsRequest pullRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, PullSettingsRequest.class);
                     LOG.info("[INFO] Going to fetch the settings related to module : {}", pullRequest.getModuleName());
-                    List<SettingType> settings = service.getList(pullRequest.getModuleName());
+                    List<SettingType> settings = service.getListIncludingGlobal(pullRequest.getModuleName());
                     if (settings == null) {
                         responseMessage = ModuleResponseMapper.toPullSettingsResponse(new ArrayList<SettingType>(), PullSettingsStatus.MISSING);
                     } else {
@@ -96,20 +95,20 @@ public class ConfigEventConsumerBean implements MessageListener {
                     ResetSettingRequest resetRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, ResetSettingRequest.class);
                     SettingType deletedSetting;
                     if (resetRequest.getSetting().getId() != null) {
-                        deletedSetting = service.delete(resetRequest.getSetting().getId(), resetRequest.getUsername());
+                        deletedSetting = service.reset(resetRequest.getSetting().getId(), resetRequest.getUsername());
                     } else {
-                        deletedSetting = service.delete(resetRequest.getSetting().getKey(), resetRequest.getSetting().getModule(), resetRequest.getUsername());
+                        deletedSetting = service.reset(resetRequest.getSetting().getKey(), resetRequest.getSetting().getModule(), resetRequest.getUsername());
                     }
                     responseMessage = ModuleResponseMapper.toSingleSettingResponse(deletedSetting);
                     messageProducer.sendResponseMessageToSender(textMessage, responseMessage);
                     break;
                 case PING:
                     PingRequest pingRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, PingRequest.class);
-                    service.setModuleTimestamp(pingRequest.getModuleName(), new Date(textMessage.getJMSTimestamp()));
+                    service.setModuleTimestamp(pingRequest.getModuleName(), Instant.ofEpochMilli(textMessage.getJMSTimestamp()));
                     break;
                 case LIST:
                     ListSettingsRequest listRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, ListSettingsRequest.class);
-                    List<SettingType> list = service.getList(listRequest.getModuleName());
+                    List<SettingType> list = service.getListIncludingGlobal(listRequest.getModuleName());
                     if (list == null) {
                         responseMessage = ModuleResponseMapper.toSettingsListResponse(new ArrayList<SettingType>());
                     } else {
