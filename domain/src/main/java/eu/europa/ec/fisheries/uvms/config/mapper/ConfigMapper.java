@@ -16,17 +16,15 @@ import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.Stateless;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Stateless
-public class ConfigMapperBean {
+public class ConfigMapper {
 
-    final static Logger LOG = LoggerFactory.getLogger(ConfigMapperBean.class);
+    final static Logger LOG = LoggerFactory.getLogger(ConfigMapper.class);
 
-    private Setting mapToEntity(Setting entity, SettingType setting, String username) {
+    public static Setting mapToEntity(Setting entity, SettingType setting, String username) {
         entity.setKey(setting.getKey());
         entity.setValue(setting.getValue());
         entity.setDescription(setting.getDescription());
@@ -35,7 +33,7 @@ public class ConfigMapperBean {
         return entity;
     }
 
-    SettingType mapToModel(SettingType model, Setting entity) {
+    public static SettingType mapToModel(SettingType model, Setting entity) {
         if (model == null) {
             model = new SettingType();
         }
@@ -53,21 +51,21 @@ public class ConfigMapperBean {
         return model;
     }
 
-    public Setting toEntity(SettingType vessel, String username) {
+    public static Setting toEntity(SettingType vessel, String username) {
         Setting entity = new Setting();
         entity.setGlobal(vessel.isGlobal()); // Set globality once and never change it.
         return mapToEntity(entity, vessel, username);
     }
 
-    public Setting toEntity(Setting entity, SettingType vessel, String username) {
+    public static Setting toEntity(Setting entity, SettingType vessel, String username) {
         return mapToEntity(entity, vessel, username);
     }
 
-    public SettingType toModel(Setting vesselEntity) {
+    public static SettingType toModel(Setting vesselEntity) {
         return mapToModel(null, vesselEntity);
     }
 
-    public List<SettingType> toModel(List<Setting> entities) {
+    public static List<SettingType> toModel(List<Setting> entities) {
         List<SettingType> models = new ArrayList<>();
         for (Setting entity : entities) {
             models.add(toModel(entity));
