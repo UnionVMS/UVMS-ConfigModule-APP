@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.config.model.mapper;
 
 import eu.europa.ec.fisheries.schema.config.module.v1.*;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 
 import java.util.List;
 

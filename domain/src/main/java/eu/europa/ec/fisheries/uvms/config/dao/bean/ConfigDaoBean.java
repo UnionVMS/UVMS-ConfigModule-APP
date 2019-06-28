@@ -12,8 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.config.dao.bean;
 
 import eu.europa.ec.fisheries.uvms.config.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoException;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.NoEntityFoundException;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
 import org.slf4j.Logger;
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -35,14 +32,9 @@ public class ConfigDaoBean {
     protected EntityManager em;
 
 
-    public Setting createSetting(Setting entity) throws DaoException {
-        try {
-            em.persist(entity);
-            return entity;
-        } catch (Exception e) {
-            LOG.error("[ Error when creating setting. ] {}", e.getMessage());
-            throw new DaoException("[ Error when creating setting. ]", e);
-        }
+    public Setting createSetting(Setting entity) {
+        em.persist(entity);
+        return entity;
     }
 
     public Setting getSettingById(Long id) {

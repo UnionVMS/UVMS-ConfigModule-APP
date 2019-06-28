@@ -18,10 +18,8 @@ import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
 import eu.europa.ec.fisheries.uvms.config.bean.ConfigDomainModelBean;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditObjectTypeEnum;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditOperationEnum;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMapperException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +38,7 @@ public class ConfigServiceBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
 
-    @EJB
+    @Inject
     private ConfigMessageProducerBean producer;
 
     @Inject

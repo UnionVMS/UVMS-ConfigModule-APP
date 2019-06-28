@@ -21,8 +21,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import eu.europa.ec.fisheries.uvms.config.MockData;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoException;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoMappingException;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 
@@ -39,7 +37,7 @@ public class MapperTest {
     }
 
     @Test
-    public void testEntityToModel() throws DaoException, DaoMappingException {
+    public void testEntityToModel() {
         Long id = 1L;
         Setting entity = MockData.getEntity(id);
 
@@ -50,7 +48,7 @@ public class MapperTest {
     }
 
     @Test
-    public void testModelToEntity() throws DaoException, DaoMappingException {
+    public void testModelToEntity() {
         Long id = 1L;
         String user = "testUser";
         SettingType model = MockData.getModel(id);
@@ -61,7 +59,7 @@ public class MapperTest {
     }
 
     @Test
-    public void testEntityAndModelToEntity() throws DaoException, DaoMappingException {
+    public void testEntityAndModelToEntity() {
         Long id = 1L;
         String user = "testUser";
         Setting entity = MockData.getEntity(id);
@@ -73,7 +71,7 @@ public class MapperTest {
     }
 
     @Test
-    public void testEntityAndModelToModel() throws DaoException, DaoMappingException {
+    public void testEntityAndModelToModel() {
         Setting entity = MockData.getEntity(1L);
         SettingType result = mapper.mapToModel(null, entity);
 

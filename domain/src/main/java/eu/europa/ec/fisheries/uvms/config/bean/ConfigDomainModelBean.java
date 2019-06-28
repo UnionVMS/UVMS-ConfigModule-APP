@@ -16,8 +16,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
 import eu.europa.ec.fisheries.uvms.config.dao.bean.ConfigDaoBean;
 import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapperBean;
@@ -26,22 +25,18 @@ import org.slf4j.LoggerFactory;
 
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCatalogEntry;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoException;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoMappingException;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
 
 @Stateless
 public class ConfigDomainModelBean {
 
     final static Logger LOG = LoggerFactory.getLogger(ConfigDomainModelBean.class);
 
-    @EJB
+    @Inject
     ConfigDaoBean dao;
 
-    @EJB
+    @Inject
     ConfigMapperBean mapper;
 
     public SettingType create(SettingType setting, String moduleName, String username) {
@@ -205,7 +200,7 @@ public class ConfigDomainModelBean {
     /**
      * Creates a setting, associated with a specific module. 
      */
-    private SettingType createModuleSetting(Module module, SettingType setting, String username) throws DaoMappingException, DaoException {
+    private SettingType createModuleSetting(Module module, SettingType setting, String username) {
         Setting existingSetting = dao.getSetting(setting.getKey(), module.getModuleName());
         if (existingSetting != null) {
             // Update existing setting
