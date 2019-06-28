@@ -13,46 +13,18 @@ package eu.europa.ec.fisheries.uvms.config.model.mapper;
 
 import java.util.List;
 
-import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
 import eu.europa.ec.fisheries.schema.config.module.v1.PullSettingsResponse;
 import eu.europa.ec.fisheries.schema.config.module.v1.PushSettingsResponse;
 import eu.europa.ec.fisheries.schema.config.module.v1.SettingsListResponse;
 import eu.europa.ec.fisheries.schema.config.module.v1.SingleSettingResponse;
-import eu.europa.ec.fisheries.schema.config.types.v1.ConfigFault;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMapperException;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 
 public class ModuleResponseMapper {
 
-    private static void validateResponse(TextMessage response, String correlationId) throws ModelMapperException, JMSException {
-
-        if (response == null) {
-            throw new ModelMapperException("Error when validating response in ResponseMapper: Response is Null");
-        }
-
-        if (response.getJMSCorrelationID() == null) {
-            throw new ModelMapperException("No corelationId in response (Null) . Expected was: " + correlationId);
-        }
-
-        if (!correlationId.equalsIgnoreCase(response.getJMSCorrelationID())) {
-            throw new ModelMapperException("Wrong corelationId in response. Expected was: " + correlationId + "But actual was: " + response.getJMSCorrelationID());
-        }
-
-        try {
-            ConfigFault fault = JAXBMarshaller.unmarshallTextMessage(response, ConfigFault.class);
-            throw new ModelMapperException(fault.getMessage());
-        } catch (ModelMarshallException e) {
-            // Expected exception
-        }
-
-    }
-
-    public static List<SettingType> getSettingsFromPullSettingsResponse(TextMessage message) throws ModelMapperException, JMSException {
-        validateResponse(message, message.getJMSCorrelationID());
+    public static List<SettingType> getSettingsFromPullSettingsResponse(TextMessage message) {
         PullSettingsResponse response = JAXBMarshaller.unmarshallTextMessage(message, PullSettingsResponse.class);
         if (response.getStatus() == PullSettingsStatus.MISSING) {
             return null;
@@ -61,34 +33,33 @@ public class ModuleResponseMapper {
         return response.getSettings();
     }
 
-    public static String toPullSettingsResponse(List<SettingType> settings, PullSettingsStatus status) throws ModelMarshallException {
+    public static String toPullSettingsResponse(List<SettingType> settings, PullSettingsStatus status) {
         PullSettingsResponse response = new PullSettingsResponse();
         response.getSettings().addAll(settings);
         response.setStatus(status);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String toPushSettingsResponse(List<SettingType> settings) throws ModelMarshallException {
+    public static String toPushSettingsResponse(List<SettingType> settings) {
         PushSettingsResponse response = new PushSettingsResponse();
         response.setStatus(PullSettingsStatus.OK);
         response.getSettings().addAll(settings);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String toSingleSettingResponse(SettingType setting) throws ModelMarshallException {
+    public static String toSingleSettingResponse(SettingType setting) {
         SingleSettingResponse response = new SingleSettingResponse();
         response.setSetting(setting);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String toSettingsListResponse(List<SettingType> settings) throws ModelMarshallException {
+    public static String toSettingsListResponse(List<SettingType> settings) {
         SettingsListResponse response = new SettingsListResponse();
         response.getSettings().addAll(settings);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static List<SettingType> getSettingsFromSettingsListResponse(TextMessage message) throws ModelMapperException, JMSException {
-        validateResponse(message, message.getJMSCorrelationID());
+    public static List<SettingType> getSettingsFromSettingsListResponse(TextMessage message) {
         SettingsListResponse response = JAXBMarshaller.unmarshallTextMessage(message, SettingsListResponse.class);
         return response.getSettings();
     }

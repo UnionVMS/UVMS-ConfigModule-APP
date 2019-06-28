@@ -18,7 +18,7 @@ import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.context.MappedDiagnosticContext;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.config.service.ConfigService;
+import eu.europa.ec.fisheries.uvms.config.service.bean.ConfigServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,8 +47,8 @@ public class ConfigEventConsumerBean implements MessageListener {
     @Inject
     ConfigMessageProducerBean messageProducer;
 
-    @EJB
-    private ConfigService service;
+    @Inject
+    private ConfigServiceBean service;
 
     @Override
     public void onMessage(Message message) {

@@ -16,6 +16,7 @@ import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
 
+import eu.europa.ec.fisheries.uvms.config.service.bean.ConfigServiceBean;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -31,8 +32,6 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCreateQuery;
 import eu.europa.ec.fisheries.uvms.config.rest.service.SettingsRestResource;
 import eu.europa.ec.fisheries.uvms.config.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.config.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.config.service.ConfigService;
-import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.mockdata.MockData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +52,7 @@ public class RestResourceTest {
     SettingsRestResource SERVICE_NULL = new SettingsRestResource();
 
     @Mock
-    ConfigService serviceLayer;
+    ConfigServiceBean serviceLayer;
 
     @Mock
     HttpServletRequest request;
@@ -89,10 +88,9 @@ public class RestResourceTest {
     /**
      * Test get list with a happy outcome
      *
-     * @throws ServiceException
      */
     @Test
-    public void testGetVesselList() throws ServiceException {
+    public void testGetVesselList() {
         doReturn(DTO_LIST).when(serviceLayer).getList("apa");
         ResponseDto result = settingsRestResource.getByModuleName("apa");
         assertEquals(SUCCESS_RESULT_LIST.toString(), result.toString());
@@ -101,10 +99,9 @@ public class RestResourceTest {
     /**
      * Test get list when the injected EJB is null
      *
-     * @throws ServiceException
      */
     @Test
-    public void testGetVesselListNull() throws ServiceException {
+    public void testGetVesselListNull() {
         ResponseDto result = SERVICE_NULL.getByModuleName("apa");
         assertEquals(ERROR_RESULT.toString(), result.toString());
     }
@@ -112,10 +109,9 @@ public class RestResourceTest {
     /**
      * Test get by id with a happy outcome
      *
-     * @throws ServiceException
      */
     @Test
-    public void testGetVesselById() throws ServiceException {
+    public void testGetVesselById() {
         doReturn(DTO).when(serviceLayer).getById(ID);
         ResponseDto result = settingsRestResource.getById(ID);
         Mockito.verify(serviceLayer).getById(ID);
@@ -126,10 +122,9 @@ public class RestResourceTest {
     /**
      * Test get by id when the injected EJB is null
      *
-     * @throws ServiceException
      */
     @Test
-    public void testGetVesselByIdNull() throws ServiceException {
+    public void testGetVesselByIdNull() {
         ResponseDto result = SERVICE_NULL.getById(ID);
         assertEquals(ERROR_RESULT.toString(), result.toString());
     }
@@ -137,10 +132,9 @@ public class RestResourceTest {
     /**
      * Test create with a happy outcome
      *
-     * @throws ServiceException
      */
     @Test
-    public void testCreateVessel() throws ServiceException {
+    public void testCreateVessel() {
         SettingsCreateQuery query = new SettingsCreateQuery();
         query.setModuleName("apa");
         query.setSetting(DTO);
@@ -165,10 +159,9 @@ public class RestResourceTest {
     /**
      * Test update with a happy outcome
      *
-     * @throws ServiceException
      */
     @Test
-    public void testUpdateVessel() throws ServiceException {
+    public void testUpdateVessel() {
         doReturn("testUsername").when(request).getRemoteUser();
         ResponseDto result = settingsRestResource.update(1L, DTO);
         Mockito.verify(serviceLayer).update(1L, DTO, "testUsername");

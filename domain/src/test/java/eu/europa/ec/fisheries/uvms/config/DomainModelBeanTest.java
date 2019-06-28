@@ -17,6 +17,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 
+import eu.europa.ec.fisheries.uvms.config.dao.bean.ConfigDaoBean;
+import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapperBean;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,13 +28,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import eu.europa.ec.fisheries.uvms.config.bean.ConfigDomainModelBean;
-import eu.europa.ec.fisheries.uvms.config.dao.ConfigDao;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoException;
-import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoMappingException;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
-import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapper;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 
 
@@ -40,10 +37,10 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 public class DomainModelBeanTest {
 
     @Mock
-    ConfigDao dao;
+    ConfigDaoBean dao;
 
     @Mock
-    ConfigMapper mapper;
+    ConfigMapperBean mapper;
 
     @InjectMocks
     private ConfigDomainModelBean model;
@@ -54,7 +51,7 @@ public class DomainModelBeanTest {
     }
 
     @Test
-    public void testCreateModel() throws ConfigModelException, DaoException, DaoMappingException {
+    public void testCreateModel() {
         Long id = 1L;
         String username ="testUser";
 
@@ -76,7 +73,7 @@ public class DomainModelBeanTest {
     }
 
     @Test
-    public void testGetModelById() throws DaoException, ConfigModelException, DaoMappingException {
+    public void testGetModelById() {
         Long id = 1L;
         Setting entity = new Setting();
         entity.setId(id);

@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import eu.europa.ec.fisheries.uvms.config.dao.bean.ConfigDaoBean;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import eu.europa.ec.fisheries.uvms.config.MockData;
-import eu.europa.ec.fisheries.uvms.config.dao.ConfigDao;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
 import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapperBean;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
@@ -32,7 +32,7 @@ public class ConfigDomainModelTest {
 
     @Test
     public void testGetSettingsCatalog() throws Exception {
-        ConfigDao mockDao = Mockito.mock(ConfigDao.class);
+        ConfigDaoBean mockDao = Mockito.mock(ConfigDaoBean.class);
 
         // Mock 1 global setting
         ArrayList<Setting> globalSettings = new ArrayList<Setting>(Arrays.asList(MockData.getEntity(3)));
@@ -58,7 +58,7 @@ public class ConfigDomainModelTest {
 
     @Test
     public void testGetSettingsList() throws Exception {
-        ConfigDao mockDao = Mockito.mock(ConfigDao.class);
+        ConfigDaoBean mockDao = Mockito.mock(ConfigDaoBean.class);
 
         // Mock 2 module settings
         ArrayList<Setting> moduleSettings = new ArrayList<Setting>(Arrays.asList(MockData.getEntity(1), MockData.getEntity(2)));

@@ -13,20 +13,19 @@ package eu.europa.ec.fisheries.uvms.config.model.mapper;
 
 import eu.europa.ec.fisheries.schema.config.module.v1.*;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 
 import java.util.List;
 
 public class ModuleRequestMapper {
 	
-    public static String toPullSettingsRequest(String moduleName) throws ModelMarshallException {
+    public static String toPullSettingsRequest(String moduleName) {
         PullSettingsRequest request = new PullSettingsRequest();
         request.setMethod(ConfigModuleMethod.PULL);
         request.setModuleName(moduleName);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
-    public static String toPushSettingsRequest(String moduleName, List<SettingType> settings, String username) throws ModelMarshallException {
+    public static String toPushSettingsRequest(String moduleName, List<SettingType> settings, String username) {
         PushSettingsRequest request = new PushSettingsRequest();
         request.setMethod(ConfigModuleMethod.PUSH);
         request.setUsername(username);
@@ -35,7 +34,7 @@ public class ModuleRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
     
-    public static String toSetSettingRequest(String module, SettingType setting, String username) throws ModelMarshallException {
+    public static String toSetSettingRequest(String module, SettingType setting, String username) {
     	SetSettingRequest request = new SetSettingRequest();
     	request.setMethod(ConfigModuleMethod.SET);
     	request.setModule(module);
@@ -44,35 +43,35 @@ public class ModuleRequestMapper {
     	return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
     
-    public static String toResetSettingRequest(SettingType setting) throws ModelMarshallException {
+    public static String toResetSettingRequest(SettingType setting) {
     	ResetSettingRequest request = new ResetSettingRequest();
     	request.setMethod(ConfigModuleMethod.RESET);
     	request.setSetting(setting);
     	return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
     
-    public static String toConfigDeployedMessage() throws ModelMarshallException {
+    public static String toConfigDeployedMessage() {
         ConfigModuleStatusMessage message = new ConfigModuleStatusMessage();
         message.setStatus(ConfigModuleStatus.DEPLOYED);
         return JAXBMarshaller.marshallJaxBObjectToString(message);
     }
 
-    public static String toSetSettingEventRequest(SettingType setting) throws ModelMarshallException {
+    public static String toSetSettingEventRequest(SettingType setting) {
         return JAXBMarshaller.marshallJaxBObjectToString(ModuleRequestMapper.createSettingEventMessage(setting, SettingEventType.SET));
     }
 
-    public static String toResetSettingEventRequest(SettingType setting) throws ModelMarshallException {
+    public static String toResetSettingEventRequest(SettingType setting) {
         return JAXBMarshaller.marshallJaxBObjectToString(ModuleRequestMapper.createSettingEventMessage(setting, SettingEventType.RESET));
     }
 
-    public static String toPingRequest(String moduleName) throws ModelMarshallException {
+    public static String toPingRequest(String moduleName) {
         PingRequest request = new PingRequest();
         request.setMethod(ConfigModuleMethod.PING);
         request.setModuleName(moduleName);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
-    public static String toListSettingsRequest(String moduleName) throws ModelMarshallException {
+    public static String toListSettingsRequest(String moduleName) {
         ListSettingsRequest request = new ListSettingsRequest();
         request.setMethod(ConfigModuleMethod.LIST);
         request.setModuleName(moduleName);

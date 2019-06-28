@@ -15,8 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,6 +30,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import eu.europa.ec.fisheries.uvms.config.service.bean.ConfigServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +39,6 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCreateQuery;
 import eu.europa.ec.fisheries.uvms.config.rest.dto.ResponseCode;
 import eu.europa.ec.fisheries.uvms.config.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.config.rest.mapper.ModuleStatusMapper;
-import eu.europa.ec.fisheries.uvms.config.service.ConfigService;
-import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 
@@ -50,8 +49,8 @@ public class SettingsRestResource {
 
     final static Logger LOG = LoggerFactory.getLogger(SettingsRestResource.class);
 
-    @EJB
-    ConfigService serviceLayer;
+    @Inject
+    ConfigServiceBean serviceLayer;
 
     @Context
     private HttpServletRequest request;
@@ -72,8 +71,8 @@ public class SettingsRestResource {
             SettingType setting = serviceLayer.create(query.getSetting(), query.getModuleName(), request.getRemoteUser());
             return new ResponseDto(setting, ResponseCode.OK);
         }
-        catch (ServiceException | NullPointerException e) {
-            LOG.error("[ Error when creating setting:{} ] {} ",query, e.getMessage());
+        catch (Exception e) {
+            LOG.error("[ Error when creating setting:{} ] {} ",query, e.getMessage(), e);
             return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
         }
     }
@@ -92,8 +91,8 @@ public class SettingsRestResource {
         try {
             return new ResponseDto(serviceLayer.getById(settingId), ResponseCode.OK);
         }
-        catch (ServiceException | NullPointerException e) {
-            LOG.error("[ Error when getting setting by ID. {}] {} ",settingId, e.getMessage());
+        catch (Exception e) {
+            LOG.error("[ Error when getting setting by ID. {}] {} ",settingId, e.getMessage(), e);
             return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
         }
     }
@@ -120,7 +119,7 @@ public class SettingsRestResource {
 
             return new ResponseDto(settings, ResponseCode.OK);
         }
-        catch (ServiceException | NullPointerException ex) {
+        catch (Exception ex) {
             LOG.error("[ Error when getting settings list. {} ] {} ",moduleName, ex);
             return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
         }
@@ -142,8 +141,8 @@ public class SettingsRestResource {
         try {
             return new ResponseDto(serviceLayer.update(settingId, setting, request.getRemoteUser()), ResponseCode.OK);
         }
-        catch (ServiceException | NullPointerException e) {
-            LOG.error("[ Error when updating setting. {} {}] {} ",settingId,setting, e.getMessage());
+        catch (Exception e) {
+            LOG.error("[ Error when updating setting. {} {}] {} ",settingId,setting, e.getMessage(), e);
             return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
         }
     }
@@ -162,8 +161,8 @@ public class SettingsRestResource {
         try {
             return new ResponseDto(serviceLayer.delete(id, request.getRemoteUser()), ResponseCode.OK);
         }
-        catch (ServiceException | NullPointerException e) {
-            LOG.error("[ Error when updating setting. {}] {} ",id, e.getMessage());
+        catch (Exception e) {
+            LOG.error("[ Error when updating setting. {}] {} ",id, e.getMessage() , e);
             return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
         }
     }
@@ -180,8 +179,8 @@ public class SettingsRestResource {
         try {
             return new ResponseDto(serviceLayer.getCatalog(), ResponseCode.OK);
         }
-        catch (ServiceException | NullPointerException ex) {
-            LOG.error("[ Error when getting catalog. ] {} ", ex.getMessage());
+        catch (Exception ex) {
+            LOG.error("[ Error when getting catalog. ] {} ", ex.getMessage() , ex);
             return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
         }
     }
@@ -209,8 +208,8 @@ public class SettingsRestResource {
     public ResponseDto getGlobalSettings() {
         try {
             return new ResponseDto(serviceLayer.getGlobalSettings(), ResponseCode.OK);
-        } catch (ServiceException e) {
-            LOG.error("[ Error when getting global settings. ] {} ", e.getMessage());
+        } catch (Exception e) {
+            LOG.error("[ Error when getting global settings. ] {} ", e.getMessage(), e);
             return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
         }
     }

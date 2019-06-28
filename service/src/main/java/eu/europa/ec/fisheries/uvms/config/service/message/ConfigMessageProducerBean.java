@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.config.service.message;
 
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
-import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.JAXBMarshaller;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -45,15 +44,19 @@ public class ConfigMessageProducerBean extends AbstractProducer {
         return auditProducer.sendModuleMessage(text, configConsumer.getDestination());
     }
 
-    public void sendConfigDeployedMessage(String text) throws JMSException {
-        configTopicProducer.sendEventBusMessage(text, StringUtils.EMPTY);
+    public void sendConfigDeployedMessage(String text) {
+        try {
+            configTopicProducer.sendEventBusMessage(text, StringUtils.EMPTY);
+        }catch (JMSException e){
+            throw new RuntimeException(e);
+        }
     }
 
     public void sendModuleErrorMessage(TextMessage message, String error) {
         try {
             String faultString = JAXBMarshaller.marshallJaxBObjectToString(error);
             this.sendResponseMessageToSender(message, faultString, 60000, DeliveryMode.NON_PERSISTENT);
-        } catch (ModelMarshallException | JMSException e) {
+        } catch (Exception e) {
             LOG.error("Error when sending module error message.", e);
         }
     }
