@@ -9,7 +9,7 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package rest.service;
+package eu.europa.ec.fisheries.uvms.config.rest.service;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.doReturn;
