@@ -14,13 +14,13 @@ package eu.europa.ec.fisheries.uvms.config.rest;
 import eu.europa.ec.fisheries.uvms.config.rest.constants.RestConstants;
 import eu.europa.ec.fisheries.uvms.config.rest.service.SettingsRestResource;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
-
-import java.util.HashSet;
-import java.util.Set;
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
 
 @ApplicationPath(RestConstants.MODULE_REST)
 public class RestActivator extends Application {

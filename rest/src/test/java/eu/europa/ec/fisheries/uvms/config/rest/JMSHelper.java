@@ -18,7 +18,7 @@ import java.util.Enumeration;
 public class JMSHelper {
 
     private static final long TIMEOUT = 20000;
-    private static final String MOVEMENT_QUEUE = "UVMSAuditEvent";
+    private static final String CONFIG_QUEUE = "UVMSConfigEvent";
     public static final String RESPONSE_QUEUE = "IntegrationTestsResponseQueue";
 
     private final ConnectionFactory connectionFactory;
@@ -35,12 +35,12 @@ public class JMSHelper {
     }*/
 
 
-    public String sendAuditMessage(String text, String function) throws Exception {
+    public String sendConfigMessage(String text, String function) throws Exception {
         Connection connection = connectionFactory.createConnection();
         try {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Queue responseQueue = session.createQueue(RESPONSE_QUEUE);
-            Queue movementQueue = session.createQueue(MOVEMENT_QUEUE);
+            Queue movementQueue = session.createQueue(CONFIG_QUEUE);
 
             TextMessage message = session.createTextMessage();
             message.setStringProperty(MessageConstants.JMS_FUNCTION_PROPERTY, function);

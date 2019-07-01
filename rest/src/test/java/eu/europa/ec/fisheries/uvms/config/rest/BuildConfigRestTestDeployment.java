@@ -55,6 +55,8 @@ public abstract class BuildConfigRestTestDeployment {
     protected WebTarget getWebTarget() {
 
         ObjectMapper objectMapper = new ObjectMapper();
+        //objectMapper.registerModule();
+        objectMapper.findAndRegisterModules();
         Client client = ClientBuilder.newClient();
         client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
         //return client.target("http://localhost:28080/test/rest");

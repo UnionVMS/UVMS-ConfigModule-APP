@@ -11,36 +11,26 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.rest.service;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
+import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
+import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCreateQuery;
+import eu.europa.ec.fisheries.uvms.config.rest.mapper.ModuleStatusMapper;
+import eu.europa.ec.fisheries.uvms.config.service.bean.ConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
+import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-
-import eu.europa.ec.fisheries.uvms.config.service.bean.ConfigServiceBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCreateQuery;
-import eu.europa.ec.fisheries.uvms.config.rest.dto.ResponseCode;
-import eu.europa.ec.fisheries.uvms.config.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.config.rest.mapper.ModuleStatusMapper;
-import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
-import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 
 @Stateless
 @Path("/")
@@ -65,15 +55,15 @@ public class SettingsRestResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings")
-    public ResponseDto create(SettingsCreateQuery query) {
+    public Response create(SettingsCreateQuery query) {
         LOG.info("Create setting invoked in rest layer:{}",query);
         try {
             SettingType setting = serviceLayer.create(query.getSetting(), query.getModuleName(), request.getRemoteUser());
-            return new ResponseDto(setting, ResponseCode.OK);
+            return Response.ok(setting).build();
         }
         catch (Exception e) {
             LOG.error("[ Error when creating setting:{} ] {} ",query, e.getMessage(), e);
-            return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
+            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -86,14 +76,14 @@ public class SettingsRestResource {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings/{id}")
-    public ResponseDto getById(@PathParam(value = "id") final Long settingId) {
+    public Response getById(@PathParam(value = "id") final Long settingId) {
         LOG.info("Get setting by ID invoked in rest layer: {}",settingId);
         try {
-            return new ResponseDto(serviceLayer.getById(settingId), ResponseCode.OK);
+            return Response.ok(serviceLayer.getById(settingId)).build();
         }
         catch (Exception e) {
             LOG.error("[ Error when getting setting by ID. {}] {} ",settingId, e.getMessage(), e);
-            return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
+            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -109,19 +99,19 @@ public class SettingsRestResource {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings")
-    public ResponseDto getByModuleName(@QueryParam("moduleName") String moduleName) {
+    public Response getByModuleName(@QueryParam("moduleName") String moduleName) {
         LOG.info("Get settings invoked in rest layer:{}",moduleName);
         try {
             List<SettingType> settings = serviceLayer.getListIncludingGlobal(moduleName);
             if (settings == null) {
-                return new ResponseDto("No module called " + moduleName + " exists.", ResponseCode.ERROR);
+                return Response.status(400).entity("No module called " + moduleName + " exists.").build();
             }
 
-            return new ResponseDto(settings, ResponseCode.OK);
+            return Response.ok(settings).build();
         }
         catch (Exception ex) {
             LOG.error("[ Error when getting settings list. {} ] {} ",moduleName, ex);
-            return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
+            return Response.status(500).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -136,14 +126,14 @@ public class SettingsRestResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings/{id}")
-    public ResponseDto update(@PathParam(value = "id") Long settingId, final SettingType setting) {
+    public Response update(@PathParam(value = "id") Long settingId, final SettingType setting) {
         LOG.info("Update setting invoked in rest layer. {} {}",settingId,setting);
         try {
-            return new ResponseDto(serviceLayer.update(setting, request.getRemoteUser()), ResponseCode.OK);
+            return Response.ok(serviceLayer.update(setting, request.getRemoteUser())).build();
         }
         catch (Exception e) {
             LOG.error("[ Error when updating setting. {} {}] {} ",settingId,setting, e.getMessage(), e);
-            return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
+            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -156,14 +146,14 @@ public class SettingsRestResource {
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/settings/{id}")
-    public ResponseDto delete(@PathParam(value = "id") Long id) {
+    public Response delete(@PathParam(value = "id") Long id) {
         LOG.info("Delete setting invoked in rest layer. {}",id);
         try {
-            return new ResponseDto(serviceLayer.reset(id, request.getRemoteUser()), ResponseCode.OK);
+            return Response.ok(serviceLayer.reset(id, request.getRemoteUser())).build();
         }
         catch (Exception e) {
             LOG.error("[ Error when updating setting. {}] {} ",id, e.getMessage() , e);
-            return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
+            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -175,13 +165,13 @@ public class SettingsRestResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/catalog")
-    public ResponseDto catalog() {
+    public Response catalog() {
         try {
-            return new ResponseDto(serviceLayer.getCatalog(), ResponseCode.OK);
+            return Response.ok(serviceLayer.getCatalog()).build();
         }
         catch (Exception ex) {
             LOG.error("[ Error when getting catalog. ] {} ", ex.getMessage() , ex);
-            return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
+            return Response.status(500).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -192,9 +182,9 @@ public class SettingsRestResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/pings")
-    public ResponseDto getPings() {
+    public Response getPings() {
         Map<String, Instant> timestamps = serviceLayer.getModuleTimestamps();
-        return new ResponseDto(ModuleStatusMapper.mapToModuleStatus(timestamps), ResponseCode.OK);
+        return Response.ok(ModuleStatusMapper.mapToModuleStatus(timestamps)).build();
     }
 
     /**
@@ -205,12 +195,12 @@ public class SettingsRestResource {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/globals")
-    public ResponseDto getGlobalSettings() {
+    public Response getGlobalSettings() {
         try {
-            return new ResponseDto(serviceLayer.getGlobalSettings(), ResponseCode.OK);
+            return Response.ok(serviceLayer.getGlobalSettings()).build();
         } catch (Exception e) {
             LOG.error("[ Error when getting global settings. ] {} ", e.getMessage(), e);
-            return new ResponseDto(e.getMessage(), ResponseCode.ERROR);
+            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 

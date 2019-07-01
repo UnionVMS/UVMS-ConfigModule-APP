@@ -32,7 +32,7 @@ public class ModuleStatusMapper {
 
     public static ModuleStatus mapToModuleStatus(Instant lastPing) {
         ModuleStatus status = new ModuleStatus();
-        status.setLastPing(lastPing);
+        status.setLastPing(lastPing.toString());
         status.setOnline(ModuleAvailabilityBean.isOnline(lastPing));
         return status;
     }

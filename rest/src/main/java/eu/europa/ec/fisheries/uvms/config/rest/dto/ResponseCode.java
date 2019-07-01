@@ -11,19 +11,18 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.rest.dto;
 
-public enum ResponseCode implements RestResponseCode {
+public enum ResponseCode {
 
-    OK("200"),
-    ERROR("500");
+    OK(200),
+    ERROR(500);
 
-    private final String code;
+    private final int code;
 
-    private ResponseCode(String code) {
+    private ResponseCode(int code) {
         this.code = code;
     }
 
-    @Override
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
