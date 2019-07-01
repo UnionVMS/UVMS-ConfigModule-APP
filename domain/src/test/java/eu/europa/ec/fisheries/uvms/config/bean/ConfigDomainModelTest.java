@@ -52,7 +52,7 @@ public class ConfigDomainModelTest {
         List<SettingsCatalogEntry> catalog = configDomainModelBean.getSettingsCatalog();
         assertEquals(1, catalog.size());
         assertEquals("module1", catalog.get(0).getModuleName());
-        assertEquals(3, catalog.get(0).getSettings().size());
+        assertEquals(2, catalog.get(0).getSettings().size());
     }
 
     @Test

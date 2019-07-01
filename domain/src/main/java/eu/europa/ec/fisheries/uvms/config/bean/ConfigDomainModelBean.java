@@ -125,12 +125,10 @@ public class ConfigDomainModelBean {
 
     public List<SettingsCatalogEntry> getSettingsCatalog() {
         List<SettingsCatalogEntry> catalog = new ArrayList<>();
-        List<SettingType> globalSettings = ConfigMapper.toModel(dao.getGlobalSettings());
         for (Module module : dao.getModules()) {
             SettingsCatalogEntry entry = new SettingsCatalogEntry();
             entry.setModuleName(module.getModuleName());
             entry.getSettings().addAll(ConfigMapper.toModel(module.getSettings()));
-            entry.getSettings().addAll(globalSettings);
             catalog.add(entry);
         }
 
