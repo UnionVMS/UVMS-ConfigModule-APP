@@ -30,7 +30,7 @@
 
         <usm4uvms.version>4.0.19</usm4uvms.version>
         <audit.model.version>4.0.16</audit.model.version>
-        <uvms.common.version>4.0.1</uvms.common.version>
+        <uvms.common.version>4.0.2</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
