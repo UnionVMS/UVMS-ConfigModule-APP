@@ -19,7 +19,7 @@
         <docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>config</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>config</docker.liquibase.db.passwd>
-        <docker.dev.version>3.37.1.w17</docker.dev.version>
+        <docker.dev.version>3.37.3.w17</docker.dev.version>
         <mockito.version>1.10.16</mockito.version>
         <junit.version>4.12</junit.version>
         <javaee.version>7.0</javaee.version>
