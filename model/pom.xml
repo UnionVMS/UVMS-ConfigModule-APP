@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>eu.europa.ec.fisheries.uvms.config</groupId>
 		<artifactId>config</artifactId>
-		<version>4.1.1-SNAPSHOT</version>
+		<version>4.1.1</version>
 	</parent>
 
 	<artifactId>config-model</artifactId>
@@ -68,7 +68,7 @@
 
 	<scm>
 		<connection>scm:git:https://github.com/UnionVMS/UVMS-ConfigModule-MODEL.git</connection>
-		<tag>HEAD</tag>
+		<tag>config-4.1.1</tag>
 	</scm>
 
 	<build>
