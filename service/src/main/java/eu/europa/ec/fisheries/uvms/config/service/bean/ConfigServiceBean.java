@@ -13,8 +13,7 @@ package eu.europa.ec.fisheries.uvms.config.service.bean;
 
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCatalogEntry;
-import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
+import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogModelMapper;
 import eu.europa.ec.fisheries.uvms.config.bean.ConfigDomainModelBean;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditObjectTypeEnum;
 import eu.europa.ec.fisheries.uvms.config.model.constants.AuditOperationEnum;
@@ -128,10 +127,10 @@ public class ConfigServiceBean {
                 affectedObject = setting.getKey();
             }
 
-            String message = AuditLogMapper.mapToAuditLog(AuditObjectTypeEnum.SETTING.getValue(), operation.getValue(), affectedObject, userName);
+            String message = AuditLogModelMapper.mapToAuditLog(AuditObjectTypeEnum.SETTING.getValue(), operation.getValue(), affectedObject, userName);
             producer.sendAuditMessage(message);
         }
-        catch (AuditModelMarshallException | JMSException e) {
+        catch (JMSException e) {
             LOG.error("[ Error when sending message to Audit. {} {} {} ] {}",operation,setting,userName, e.getMessage());
         }
     }
