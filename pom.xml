@@ -19,7 +19,7 @@
         <docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>config</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>config</docker.liquibase.db.passwd>
-        <docker.dev.version>3.39.2.w17</docker.dev.version>
+        <docker.dev.version>3.39.4.w17</docker.dev.version>
 
         <usm4uvms.version>4.0.23</usm4uvms.version>
         <audit.model.version>4.1.2</audit.model.version>
