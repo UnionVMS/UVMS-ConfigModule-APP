@@ -35,14 +35,11 @@ public class RequestFilter implements Filter {
     /**
      * {@code corsOriginRegex} is valid for given host names/IPs and any range of sub domains.
      *
-     * localhost:28080
-     * localhost:8080
-     * 127.0.0.1:28080
-     * 127.0.0.1:8080
-     * 192.168.***.***:28080
-     * 192.168.***.***:8080
-     * *.hav.havochvatten.se:8080
-     * *.hav.havochvatten.se:28080
+     * localhost:[2]8080
+     * 127.0.0.1:[2]8080
+     * 192.168.***.***:[2]8080
+     * liaswf05[t,u,d]:[2]8080
+     * havochvatten.se:[2]8080
      */
     @Resource(lookup = "java:global/cors_allowed_host_regex")
     private String corsOriginRegex;
@@ -68,6 +65,12 @@ public class RequestFilter implements Filter {
         response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_ORIGIN, RestConstants.ACCESS_CONTROL_ALLOW_METHODS_ALL);
         response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_METHODS, RestConstants.ACCESS_CONTROL_ALLOWED_METHODS);
         response.setHeader(RestConstants.ACCESS_CONTROL_ALLOW_HEADERS, RestConstants.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
+
+        if (httpServletRequest.getMethod().equals("OPTIONS")) {
+            response.setStatus(200);
+            return;
+        }
+
         chain.doFilter(request, res);
     }
 
@@ -81,5 +84,4 @@ public class RequestFilter implements Filter {
     public void destroy() {
         LOG.info("RequestFilter shutting down!");
     }
-
 }
