@@ -49,6 +49,25 @@
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>2.0.1.Final</version>
+
+                    <configuration>
+                        <filename>${project.build.finalName}.${project.packaging}</filename>
+                        <targetDir>${targetDir}</targetDir>
+                        <hostname>${hostname}</hostname>
+                        <port>${port}</port>
+                        <username>${wildfly-username}</username>
+                        <password>${wildfly-password}</password>
+                        <force>true</force>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <dependencies>
@@ -83,20 +102,20 @@
             <version>${project.parent.version}</version>
             <type>war</type>
         </dependency>
-		<dependency>
-		    <groupId>net.sf.ehcache.internal</groupId>
-		    <artifactId>ehcache-core</artifactId>
+        <dependency>
+            <groupId>net.sf.ehcache.internal</groupId>
+            <artifactId>ehcache-core</artifactId>
             <version>2.10.4</version>
             <exclusions>
-            	<exclusion>
-            		 <groupId>org.slf4j</groupId>
-    				 <artifactId>slf4j-api</artifactId>
-            	</exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>            
         </dependency>		
     </dependencies>
 
-    <!-- USE following command to run this profile: mvn clean install -P wildfly-deploy wildfly:deploy -Dhostname=127.0.0.1 -Dport=9990 -Dusername=admin -Dpassword=asdf  -->
+    <!-- USE following command to run this profile: mvn clean install -P wildfly-deploy wildfly:deploy -Dhostname=127.0.0.1 -Dport=9990 -Dusername=admin -Dpassword=asdf -->
     <profiles>
         <profile>
             <id>wildfly-deploy</id>
@@ -105,47 +124,31 @@
                     <plugin>
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
-                        <version>1.0.2.Final</version>
-                        <configuration>
-                            <filename>${project.build.finalName}.${project.packaging}</filename>
-                            <targetDir>${project.build.directory}</targetDir>
-                            <hostname>${hostname}</hostname>
-                            <port>${port}</port>
-                            <username>${username}</username>
-                            <password>${password}</password>
-                            <force>true</force>
-                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
-        <!-- COPY TO FOLDER -->
         <profile>
-            <id>copy-ear</id>
+            <id>wildfly-undeploy</id>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <version>2.10</version>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>copy-installed</id>
-                                <phase>install</phase>
+                                <phase>validate</phase>
                                 <goals>
-                                    <goal>copy</goal>
+                                    <goal>undeploy</goal>
                                 </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>${project.groupId}</groupId>
-                                            <artifactId>${project.artifactId}</artifactId>
-                                            <version>${project.version}</version>
-                                            <type>${project.packaging}</type>
-                                        </artifactItem>
-                                    </artifactItems>
-                                    <outputDirectory>C:\dev\WebLogic\domain1213\servers\AdminServer\upload</outputDirectory>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -153,5 +156,5 @@
             </build>
         </profile>
     </profiles>
-
+      
 </project>
