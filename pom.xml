@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>fish.focus.uvms.maven</groupId>
-    <artifactId>uvms-pom</artifactId>
-    <version>1.21</version>
-  </parent>
+    <parent>
+		<groupId>eu.europa.ec.fisheries.uvms</groupId>
+		<artifactId>mare-pom</artifactId>
+		<version>1.6.0-MARE</version>
+		<relativePath />
+    </parent>
 
   <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
   <artifactId>config</artifactId>
-  <version>4.0.14-SNAPSHOT</version>
+  <version>${uvms.config.module.version}</version>
   <packaging>pom</packaging>
   <description>Maven projekt-archetype for UnionVms modules</description>
 
   <properties>
-    <config.api.check.against.version>4.0.15</config.api.check.against.version>
     <docker.dev.version>3.29.2.w14</docker.dev.version>
     <docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
     <docker.liquibase.db.user>config</docker.liquibase.db.user>
@@ -27,8 +27,8 @@
     <logback.core.version>1.2.3</logback.core.version>
     <audit.model.version>4.0.10</audit.model.version>
     <javaee.version>8.0</javaee.version>
-    <uvms.common.version>3.4-SNAPSHOT</uvms.common.version>
-    <usm4uvms.version>4.0.15.1-SNAPSHOT</usm4uvms.version>
+    <uvms.common.version>${uvms.commonsLibrary.version}</uvms.common.version>
+    <usm4uvms.version>${uvms.uvms4usm.version}</usm4uvms.version>
     <hibernate.version>5.1.9.Final</hibernate.version>
 
     <project.scm.id>github</project.scm.id>

@@ -4,10 +4,10 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
         <artifactId>config</artifactId>
-        <version>4.0.14-SNAPSHOT</version>
+        <version>${uvms.config.module.version}</version>
     </parent>
     
-    <artifactId>liquibase</artifactId>
+    <artifactId>config-liquibase</artifactId>
     <name>liquibase</name>
 
     <properties>
