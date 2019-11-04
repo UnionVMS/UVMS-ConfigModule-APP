@@ -133,6 +133,7 @@
 				</plugins>
 			</build>
 			<properties>
+                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
 				<db.docker.url>offline:postgresql?changeLogFile=target/databasechangelog.csv&amp;outputLiquibaseSql=true</db.docker.url>
 			</properties>
 		</profile>               
