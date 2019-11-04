@@ -41,7 +41,7 @@
         <profile>
             <id>postgres</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
                 <db.driver>org.postgresql.Driver</db.driver>
@@ -163,7 +163,6 @@
                 <plugin>
                     <groupId>org.liquibase</groupId>
                     <artifactId>liquibase-maven-plugin</artifactId>
-                    <version>3.4.2</version>
                     <configuration>
                         <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                         <changeLogFile>${db.changeLogFile}</changeLogFile>
