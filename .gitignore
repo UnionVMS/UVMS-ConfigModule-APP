@@ -4,3 +4,7 @@ logging.properties
 *.iml
 *.idea
 .flattened-pom.xml
+.project
+.classpath
+.settings/
+pom.xml.versionsBackup
