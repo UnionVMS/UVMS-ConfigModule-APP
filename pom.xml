@@ -4,7 +4,7 @@
     <parent>
         <groupId>fish.focus.uvms.maven</groupId>
         <artifactId>uvms-pom</artifactId>
-        <version>2.4</version>
+        <version>3.0</version>
     </parent>
 
     <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
@@ -19,12 +19,12 @@
         <docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>config</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>config</docker.liquibase.db.passwd>
-        <docker.dev.version>3.40.3.w18</docker.dev.version>
+        <docker.dev.version>3.40.21.w18</docker.dev.version>
 
-        <fish.focus.parent.version>2.4</fish.focus.parent.version>
+        <fish.focus.parent.version>3.0</fish.focus.parent.version>
         <usm4uvms.version>4.0.23</usm4uvms.version>
         <audit.model.version>4.1.2</audit.model.version>
-        <uvms.common.version>4.0.4</uvms.common.version>
+        <uvms.common.version>4.0.13</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
@@ -101,47 +101,6 @@
         <connection>scm:git:https://github.com/UnionVMS/UVMS-ConfigModule-APP.git</connection>
         <tag>HEAD</tag>
     </scm>
-
-    <profiles>
-        <!-- enforce-jdk-version -->
-        <profile>
-            <id>enforce-jdk-version</id>
-            <activation>
-                <!-- To disable profile, define property -Dfocus-pom.enforce.jdk.version.disabled=true -->
-                <property>
-                    <name>!focus-pom.enforce.jdk.version.disabled</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <inherited>false</inherited>
-                        <executions>
-                            <execution>
-                                <id>enforce-jdk-version</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <enforceBytecodeVersion>
-                                            <maxJdkVersion>${focus-pom.java.version}</maxJdkVersion>
-                                            <!-- NOTE: xstream do contain support for multiple jdk:s -->
-                                            <excludes>
-                                                <exclude>com.thoughtworks.xstream:xstream</exclude>
-                                            </excludes>
-                                        </enforceBytecodeVersion>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <modules>
         <module>model</module>
