@@ -12,9 +12,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.config.rest.mapper;
 
 import eu.europa.ec.fisheries.uvms.config.rest.entity.ModuleStatus;
-import eu.europa.ec.fisheries.uvms.config.service.bean.ModuleAvailabilityBean;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,8 +34,12 @@ public class ModuleStatusMapper {
     public static ModuleStatus mapToModuleStatus(Instant lastPing) {
         ModuleStatus status = new ModuleStatus();
         status.setLastPing(lastPing.toString());
-        status.setOnline(ModuleAvailabilityBean.isOnline(lastPing));
+        status.setOnline(isOnline(lastPing));
         return status;
+    }
+
+    public static boolean isOnline(Instant timestamp) {
+        return Duration.between(Instant.now(), timestamp).minus(5, ChronoUnit.MINUTES).isNegative();
     }
 
 }

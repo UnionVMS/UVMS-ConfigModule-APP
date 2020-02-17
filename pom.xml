@@ -19,12 +19,12 @@
         <docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>config</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>config</docker.liquibase.db.passwd>
-        <docker.dev.version>3.40.21.w18</docker.dev.version>
+        <docker.dev.version>3.40.19.w18-JsonBOverJackson</docker.dev.version>
 
         <fish.focus.parent.version>3.0</fish.focus.parent.version>
         <usm4uvms.version>4.1.0</usm4uvms.version>
         <audit.model.version>4.2.0</audit.model.version>
-        <uvms.common.version>4.0.13</uvms.common.version>
+        <uvms.common.version>4.1.1</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
@@ -72,6 +72,11 @@
                 <artifactId>uvms-pom-java11-deps</artifactId>
                 <version>${fish.focus.parent.version}</version>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+                <artifactId>uvms-commons-date</artifactId>
+                <version>${uvms.common.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,9 +1,9 @@
 package eu.europa.ec.fisheries.uvms.config.rest.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.config.module.v1.ConfigModuleMethod;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCreateQuery;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.config.rest.BuildConfigRestTestDeployment;
 import eu.europa.ec.fisheries.uvms.config.rest.JMSHelper;
@@ -15,16 +15,12 @@ import org.junit.runner.RunWith;
 
 import javax.annotation.Resource;
 import javax.jms.ConnectionFactory;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
+import javax.json.bind.Jsonb;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.StringReader;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +35,7 @@ public class ConfigRestTests extends BuildConfigRestTestDeployment {
     @Resource(mappedName = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static Jsonb jsonb = new JsonBConfigurator().getContext(null);
 
     JMSHelper jmsHelper;
 

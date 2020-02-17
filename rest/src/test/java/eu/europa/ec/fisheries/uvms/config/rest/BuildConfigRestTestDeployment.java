@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.config.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import eu.europa.ec.mare.usm.jwt.JwtTokenHandler;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
@@ -54,11 +53,8 @@ public abstract class BuildConfigRestTestDeployment {
 
     protected WebTarget getWebTarget() {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        //objectMapper.registerModule();
-        objectMapper.findAndRegisterModules();
         Client client = ClientBuilder.newClient();
-        client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
+        client.register(JsonBConfigurator.class);
         //return client.target("http://localhost:28080/test/rest");
         return client.target("http://localhost:8080/test/rest");
     }
