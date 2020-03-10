@@ -24,7 +24,7 @@
         <fish.focus.parent.version>3.0</fish.focus.parent.version>
         <usm4uvms.version>4.1.0</usm4uvms.version>
         <audit.model.version>4.3.2</audit.model.version>
-        <uvms.common.version>4.1.5</uvms.common.version>
+        <uvms.common.version>4.1.6</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
