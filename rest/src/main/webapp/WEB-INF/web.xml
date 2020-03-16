@@ -4,10 +4,6 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
 
     <context-param>
-        <param-name>resteasy.scan</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
         <param-name>usmApplication</param-name>
         <param-value>Audit</param-value>
     </context-param>
