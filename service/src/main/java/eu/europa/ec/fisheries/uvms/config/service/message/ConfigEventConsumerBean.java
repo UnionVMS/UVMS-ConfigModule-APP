@@ -32,12 +32,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@MessageDriven(mappedName = MessageConstants.QUEUE_CONFIG, activationConfig = {
-        @ActivationConfigProperty(propertyName = MessageConstants.MESSAGING_TYPE_STR, propertyValue = MessageConstants.CONNECTION_TYPE),
+@MessageDriven(activationConfig = {
         @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_TYPE_STR, propertyValue = MessageConstants.DESTINATION_TYPE_QUEUE),
-        @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_STR, propertyValue = MessageConstants.QUEUE_CONFIG_IN_NAME),
-        @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_JNDI_NAME, propertyValue = MessageConstants.QUEUE_CONFIG),
-        @ActivationConfigProperty(propertyName = MessageConstants.CONNECTION_FACTORY_JNDI_NAME, propertyValue = MessageConstants.CONNECTION_FACTORY)
+        @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_STR, propertyValue = MessageConstants.QUEUE_CONFIG),
 })
 public class ConfigEventConsumerBean implements MessageListener {
 
