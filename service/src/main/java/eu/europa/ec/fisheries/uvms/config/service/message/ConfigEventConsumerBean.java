@@ -34,7 +34,7 @@ import java.util.List;
 
 @MessageDriven(activationConfig = {
         @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_TYPE_STR, propertyValue = MessageConstants.DESTINATION_TYPE_QUEUE),
-        @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_STR, propertyValue = MessageConstants.QUEUE_CONFIG),
+        @ActivationConfigProperty(propertyName = MessageConstants.DESTINATION_LOOKUP_STR, propertyValue = MessageConstants.QUEUE_CONFIG),
 })
 public class ConfigEventConsumerBean implements MessageListener {
 
