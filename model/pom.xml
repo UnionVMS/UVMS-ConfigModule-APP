@@ -13,10 +13,8 @@
 	<description>This module shall have interfaces, XSD, and DTOs</description>
 
 	<properties>
-
 		<wsdl.contract.name>ConfigModuleService</wsdl.contract.name>
 		<wsdl.source.name>ConfigDataSourceService</wsdl.source.name>
-		<project.scm.id>github</project.scm.id>
 	</properties>
 
 	<dependencies>
@@ -39,32 +37,6 @@
 			<artifactId>uvms-commons-date</artifactId>
 		</dependency>
 	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>focus-repo</id>
-			<name>Focus nexus repository</name>
-			<url>http://nexus.focus.fish/nexus/</url>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>focus-releases</id>
-			<name>UnionVms Repository</name>
-			<url>http://nexus.focus.fish/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>focus-snapshots</id>
-			<name>UnionVms Snapshot Repository</name>
-			<url>http://nexus.focus.fish/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-	<scm>
-		<connection>scm:git:https://github.com/UnionVMS/UVMS-ConfigModule-MODEL.git</connection>
-		<tag>HEAD</tag>
-	</scm>
 
 	<build>
 		<finalName>${project.name}-${project.version}</finalName>
