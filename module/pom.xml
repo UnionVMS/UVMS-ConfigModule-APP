@@ -9,7 +9,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
         <artifactId>config</artifactId>
-        <version>4.3.4</version>
+        <version>4.3.5-SNAPSHOT</version>
     </parent>
 
     <build>
