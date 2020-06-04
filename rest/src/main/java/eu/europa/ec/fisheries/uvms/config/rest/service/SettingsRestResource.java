@@ -63,7 +63,7 @@ public class SettingsRestResource {
         }
         catch (Exception e) {
             LOG.error("[ Error when creating setting:{} ] {} ",query, e.getMessage(), e);
-            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -83,7 +83,7 @@ public class SettingsRestResource {
         }
         catch (Exception e) {
             LOG.error("[ Error when getting setting by ID. {}] {} ",settingId, e.getMessage(), e);
-            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -111,7 +111,7 @@ public class SettingsRestResource {
         }
         catch (Exception ex) {
             LOG.error("[ Error when getting settings list. {} ] {} ",moduleName, ex);
-            return Response.status(500).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
@@ -133,7 +133,7 @@ public class SettingsRestResource {
         }
         catch (Exception e) {
             LOG.error("[ Error when updating setting. {} {}] {} ",settingId,setting, e.getMessage(), e);
-            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -153,7 +153,7 @@ public class SettingsRestResource {
         }
         catch (Exception e) {
             LOG.error("[ Error when updating setting. {}] {} ",id, e.getMessage() , e);
-            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -171,7 +171,7 @@ public class SettingsRestResource {
         }
         catch (Exception ex) {
             LOG.error("[ Error when getting catalog. ] {} ", ex.getMessage() , ex);
-            return Response.status(500).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
@@ -200,7 +200,7 @@ public class SettingsRestResource {
             return Response.ok(serviceLayer.getGlobalSettings()).build();
         } catch (Exception e) {
             LOG.error("[ Error when getting global settings. ] {} ", e.getMessage(), e);
-            return Response.status(500).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
