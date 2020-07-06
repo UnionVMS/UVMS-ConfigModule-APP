@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet author="lsotiriadis" id="UNIONVMS-4616-subscription-email-params">
+        <insert tableName="settings">
+            <column name="setting_id" valueSequenceNext="hibernate_sequence" />
+            <column name="setting_key" value="subscription.email.default.subject"/>
+            <column name="setting_value" value="Subscription triggered"/>
+            <column name="global" value="0"/>
+            <column name="setting_description" value="Subscription default email subject"/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="setting_module_id" valueComputed="(SELECT module_id FROM modules WHERE module_name='subscription')"></column>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+        <insert tableName="settings">
+            <column name="setting_id" valueSequenceNext="hibernate_sequence" />
+            <column name="setting_key" value="subscription.email.default.sender"/>
+            <column name="setting_value" value="test@ec.europa.eu"/>
+            <column name="global" value="0"/>
+            <column name="setting_description" value="Subscription default email sender"/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="setting_module_id" valueComputed="(SELECT module_id FROM modules WHERE module_name='subscription')"></column>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+        <insert tableName="settings">
+            <column name="setting_id" valueSequenceNext="hibernate_sequence" />
+            <column name="setting_key" value="subscription.email.default.body"/>
+            <column name="setting_value" value="A subscription was triggered. Please find all/any related documents in the attachments of this email."/>
+            <column name="global" value="0"/>
+            <column name="setting_description" value="Subscription default email body"/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="setting_module_id" valueComputed="(SELECT module_id FROM modules WHERE module_name='subscription')"></column>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+        <rollback>
+            <delete tableName="settings">
+                <where>
+                    setting_key LIKE 'subscription.email.default%'
+                </where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
