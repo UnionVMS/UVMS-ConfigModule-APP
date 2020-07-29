@@ -36,8 +36,13 @@
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
 		    <version>3.6</version>
-		</dependency>		
-	</dependencies>
+		</dependency>
+		<dependency>
+			<groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+			<artifactId>uvms-commons-xml</artifactId>
+			<version>${uvms.commons.version}</version>
+		</dependency>
+    </dependencies>
 
 	<repositories>
 		<repository>
