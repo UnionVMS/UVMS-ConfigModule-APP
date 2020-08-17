@@ -13,6 +13,9 @@ package eu.europa.ec.fisheries.uvms.config.rest.service;
 
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingsCreateQuery;
+import eu.europa.ec.fisheries.uvms.config.dao.bean.ConfigDaoBean;
+import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
+import eu.europa.ec.fisheries.uvms.config.mapper.ConfigMapper;
 import eu.europa.ec.fisheries.uvms.config.rest.mapper.ModuleStatusMapper;
 import eu.europa.ec.fisheries.uvms.config.service.bean.ConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
@@ -41,6 +44,9 @@ public class SettingsRestResource {
 
     @Inject
     ConfigServiceBean serviceLayer;
+
+    @Inject
+    ConfigDaoBean configDaoBean;
 
     @Context
     private HttpServletRequest request;
@@ -133,6 +139,24 @@ public class SettingsRestResource {
         }
         catch (Exception e) {
             LOG.error("[ Error when updating setting. {} {}] {} ",settingId,setting, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @PUT
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Path("/settings/{module}/{key}/{value}")
+    public Response update(@PathParam(value = "module") String module, @PathParam(value = "key") String key, @PathParam(value = "value") String value) {
+        LOG.info("Updateing setting {} to {}.", key, value);
+        try {
+            Setting settingByKeyAndModule = configDaoBean.getSettingByKeyAndModule(key, module);
+            settingByKeyAndModule.setValue(value);
+            settingByKeyAndModule.setUpdatedBy(request.getRemoteUser());
+            return Response.ok(ConfigMapper.toModel(settingByKeyAndModule)).build();
+        }
+        catch (Exception e) {
+            LOG.error("[ Error when updating setting key {} to {}] {} ", key, value, e.getMessage(), e);
             throw e;
         }
     }

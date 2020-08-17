@@ -69,7 +69,7 @@ public class ConfigDaoBean {
         return settings.get(0);
     }
 
-    public Setting getSetting(String settingKey, String moduleName) {
+    public Setting getSettingByKeyAndModule(String settingKey, String moduleName) {
         TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_FIND_BY_KEY_AND_MODULE, Setting.class);
         query.setParameter("key", settingKey);
         query.setParameter("moduleName", moduleName);
