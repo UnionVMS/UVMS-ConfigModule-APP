@@ -45,7 +45,7 @@ public class ConfigRestTests extends BuildConfigRestTestDeployment {
     }
 
     @Test
-    public void worldsBestAndMostUsefullRestTest(){
+    public void worldsBestAndMostUsefulRestTest(){
         assertTrue(true);
     }
 
@@ -120,7 +120,7 @@ public class ConfigRestTests extends BuildConfigRestTestDeployment {
     }
 
     @Test
-    public void updateSetting() {
+    public void updateSettingTest() {
         SettingsCreateQuery query = new SettingsCreateQuery();
         String moduleName = "Rest test module " + UUID.randomUUID().getLeastSignificantBits();
         query.setModuleName(moduleName);
@@ -138,7 +138,35 @@ public class ConfigRestTests extends BuildConfigRestTestDeployment {
                 .put(Entity.json(createdSetting), SettingType.class);
 
         assertEquals(createdSetting.getId(), updatedSetting.getId());
-        assertEquals("Updated Value", createdSetting.getValue());
+        assertEquals("Updated Value", updatedSetting.getValue());
+    }
+
+    @Test
+    public void updateSettingViaKeyValue() {
+        SettingsCreateQuery query = new SettingsCreateQuery();
+        String moduleName = "Rest test module " + UUID.randomUUID().getLeastSignificantBits();
+        query.setModuleName(moduleName);
+        SettingType setting = createBasicSetting(moduleName);
+        query.setSetting(setting);
+
+        SettingType createdSetting = createSettingByRest(query);
+        String updatedValue = "Updated Value";
+
+        Response response = getWebTarget()
+                .path("settings")
+                .path(moduleName)
+                .path(setting.getKey())
+                .path(updatedValue)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
+                .put(Entity.json(""), Response.class);
+
+        assertEquals(200, response.getStatus());
+
+        SettingType updatedSetting = response.readEntity(SettingType.class);
+        assertEquals(createdSetting.getId(), updatedSetting.getId());
+        assertEquals(moduleName, updatedSetting.getModule());
+        assertEquals(updatedValue, updatedSetting.getValue());
     }
 
     @Test

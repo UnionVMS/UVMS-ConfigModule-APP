@@ -95,7 +95,7 @@ public class ConfigDomainModelBean {
             setting = dao.getGlobalSetting(settingKey);
         }
         else {
-            setting = dao.getSetting(settingKey, moduleName);
+            setting = dao.getSettingByKeyAndModule(settingKey, moduleName);
         }
 
         if (setting == null) {
@@ -195,7 +195,7 @@ public class ConfigDomainModelBean {
      * Creates a setting, associated with a specific module. 
      */
     private SettingType createModuleSetting(Module module, SettingType setting, String username) {
-        Setting existingSetting = dao.getSetting(setting.getKey(), module.getModuleName());
+        Setting existingSetting = dao.getSettingByKeyAndModule(setting.getKey(), module.getModuleName());
         if (existingSetting != null) {
             // Update existing setting
             Setting updatedSetting = ConfigMapper.toEntity(existingSetting, setting, username);
