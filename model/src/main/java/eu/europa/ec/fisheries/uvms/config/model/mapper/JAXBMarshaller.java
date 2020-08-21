@@ -95,7 +95,6 @@ public class JAXBMarshaller {
             LOG.debug("Unmarshalling time: {}", (System.currentTimeMillis() - before));
             return object;
         } catch (JMSException | JAXBException ex) {
-            LOG.error("[ Error when Text message to object ] {} ", ex.getMessage());
             throw new ModelMarshallException("[Error when unmarshalling response in ResponseMapper ]", ex);
         }
     }
