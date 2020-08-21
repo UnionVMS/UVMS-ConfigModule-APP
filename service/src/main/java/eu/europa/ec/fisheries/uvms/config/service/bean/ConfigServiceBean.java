@@ -55,8 +55,7 @@ public class ConfigServiceBean implements ConfigService {
             return createdSetting;
         }
         catch (ModelMapperException | eu.europa.ec.fisheries.uvms.commons.message.api.MessageException | ConfigModelException e) {
-            LOG.error("[ Error when creating setting. {} ] {}",setting, e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Error when creating setting: "+setting,e);
         }
     }
 
@@ -71,8 +70,7 @@ public class ConfigServiceBean implements ConfigService {
             return createdSettings;
         }
         catch (ConfigModelException e) {
-            LOG.error("[ Error when creating settings. {} {} {}] {}",settings,moduleName,username, e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Error when creating setting: " + settings + " " + moduleName + " " +username,e);
         }
     }
 
@@ -82,8 +80,7 @@ public class ConfigServiceBean implements ConfigService {
             return configModel.get(settingId);
         }
         catch (ConfigModelException e) {
-            LOG.error("[ Error when getting setting by ID. {}] {}",settingId, e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Error when getting setting by ID: " + settingId, e);
         }
     }
 
@@ -96,8 +93,7 @@ public class ConfigServiceBean implements ConfigService {
             return updatedSetting;
         }
         catch (ModelMapperException | MessageException | ConfigModelException e) {
-            LOG.error("[ Error when updating setting. {} {} {}] {}",settingId,setting,username, e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException(" Error when updating setting with id: " + settingId + " setting: " + setting + " username: " + username, e);
         }
     }
 
@@ -110,8 +106,7 @@ public class ConfigServiceBean implements ConfigService {
             return deletedSetting;
         }
         catch (ModelMapperException | MessageException | ConfigModelException ex) {
-            LOG.error("[ Error when deleting setting. {} {} ] {}",settingId,username, ex.getMessage());
-            throw new ServiceException(ex.getMessage());
+            throw new ServiceException("Error when deleting setting: " + settingId + " username: "+ username ,ex);
         }
     }
 
@@ -124,8 +119,7 @@ public class ConfigServiceBean implements ConfigService {
             return deletedSetting;
         }
         catch (ModelMapperException | MessageException | ConfigModelException ex) {
-            LOG.error("[ Error when deleting setting. {} {} {} ] {}",settingKey,moduleName,username, ex.getMessage());
-            throw new ServiceException(ex.getMessage());
+            throw new ServiceException("Error when deleting setting: " + settingKey + " moduleName: " + moduleName + " username: " + username,ex);
         }
     }
     
@@ -135,8 +129,7 @@ public class ConfigServiceBean implements ConfigService {
             return configModel.getList(moduleName);
         }
         catch (ConfigModelException e) {
-            LOG.error("[ Error when getting settings list for module {}. ] {}", moduleName, e);
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Error when getting settings list for module: " + moduleName, e);
         }
     }
 
@@ -147,8 +140,7 @@ public class ConfigServiceBean implements ConfigService {
             return getCatalogFromSettingCatalogResponse(catalog);
         }
         catch (ConfigModelException e) {
-            LOG.error("[ Error when getting settings catalog. ] {}", e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException(" Error when getting settings catalog",e);
         }
     }
 
@@ -176,8 +168,7 @@ public class ConfigServiceBean implements ConfigService {
         try {
             return configModel.getGlobalSettings();
         } catch (ConfigModelException e) {
-            LOG.error("[ Error when getting global settings. ] {}", e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Error when getting global settings.",e);
         }
     }
 
@@ -197,7 +188,7 @@ public class ConfigServiceBean implements ConfigService {
             producer.sendAuditMessage(message);
         }
         catch (AuditModelMarshallException | MessageException e) {
-            LOG.error("[ Error when sending message to Audit. {} {} {} ] {}",operation,setting,userName, e.getMessage());
+            LOG.error("[ Error when sending message to Audit for operation: " + operation + " setting: " + setting + " userName:" + userName, e);
         }
     }
 

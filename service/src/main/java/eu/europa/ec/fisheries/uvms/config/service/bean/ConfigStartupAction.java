@@ -41,7 +41,7 @@ public class ConfigStartupAction {
                 String message = ModuleRequestMapper.toConfigDeployedMessage();
                 producer.sendConfigDeployedMessage(message);
             } catch (Exception e) {
-                LOG.error("[ Error when sending config deployed message on topic. ] {}", e.getMessage());
+                LOG.error("Error when sending config deployed message on topic.", e);
             }
         });
     }

@@ -34,7 +34,7 @@ public class DateUtils {
         try {
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
         } catch (DatatypeConfigurationException e) {
-            LOG.error("[ Error when converting date to XMLGregorianCalendar. ] {}", e.getMessage());
+            LOG.error("Error when converting date to XMLGregorianCalendar." + e.getMessage(),e);
             return null;
         }
     }

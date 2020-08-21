@@ -57,7 +57,6 @@ public class ConfigMessageProducerBean extends AbstractProducer {
             String faultString = JAXBMarshaller.marshallJaxBObjectToString(eventMessage.getFault());
             this.sendResponseMessageToSender(eventMessage.getJmsMessage(), faultString, 60000, DeliveryMode.NON_PERSISTENT);
         } catch (ModelMarshallException | MessageException e) {
-            LOG.error("[ Error when sending module error message. ] {}", e.getMessage());
             throw new MessageException("[ Error when sending module error message. ]", e);
         }
     }

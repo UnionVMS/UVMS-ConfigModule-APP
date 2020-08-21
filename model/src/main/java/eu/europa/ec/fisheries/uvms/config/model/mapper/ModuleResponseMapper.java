@@ -25,8 +25,12 @@ import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMapperException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModuleResponseMapper {
+
+    final static Logger LOG = LoggerFactory.getLogger(ModuleResponseMapper.class);
 
     private static void validateResponse(TextMessage response, String correlationId) throws ModelMapperException, JMSException {
 
@@ -46,7 +50,7 @@ public class ModuleResponseMapper {
             ConfigFault fault = JAXBMarshaller.unmarshallTextMessage(response, ConfigFault.class);
             throw new ModelMapperException(fault.getMessage());
         } catch (ModelMarshallException e) {
-            // Expected exception
+            LOG.warn("Could not unmarshall message",e);
         }
 
     }
