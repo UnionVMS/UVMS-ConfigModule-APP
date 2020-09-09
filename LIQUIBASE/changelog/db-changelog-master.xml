@@ -6,5 +6,6 @@
 
 	<include file="v0.1/db-changelog-createTables_0.1.xml" relativeToChangelogFile="true"/>
 	<include file="../schema/initdata/globalSettings.xml" relativeToChangelogFile="true"/>
+    <include file="v4.3.6/db-changelog-recreate-hibernate-sequence.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
