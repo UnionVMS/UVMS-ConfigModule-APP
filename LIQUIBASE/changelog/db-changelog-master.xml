@@ -6,5 +6,6 @@
 	<include file="v0.1/db-changelog-createTables_0.1.xml" relativeToChangelogFile="true"/>
 	<include file="../schema/initdata/globalSettings.xml" relativeToChangelogFile="true"/>
 	<include file="../schema/initdata/subscriptionSettings.xml" relativeToChangelogFile="true"/>
+	<include file="../schema/initdata/ruleSettings.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
