@@ -8,5 +8,6 @@
 	<include file="../schema/initdata/subscriptionSettings.xml" relativeToChangelogFile="true"/>
 	<include file="3.4/db-changelog-UNIONVMS-MDR.xml" relativeToChangelogFile="true"/>
 
+	<include file="../schema/initdata/ruleSettings.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
