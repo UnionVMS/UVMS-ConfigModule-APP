@@ -40,7 +40,7 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.audit</groupId>
             <artifactId>audit-model</artifactId>
-            <version>${audit.model.version}</version>
+            <version>${uvms.audit.module.version}</version>
             <type>jar</type>
         </dependency>
     </dependencies>
