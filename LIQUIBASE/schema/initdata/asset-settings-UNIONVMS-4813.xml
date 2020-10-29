@@ -21,6 +21,24 @@
                 </where>
             </delete>
         </rollback>
+
+        <insert tableName="settings">
+            <column name="setting_id" valueSequenceNext="hibernate_sequence" />
+            <column name="setting_key" value="asset.fleetsync.scheduler.cron.expression"/>
+            <column name="setting_value" value="0 0 2 * * * *"/>
+            <column name="global" value="0"/>
+            <column name="setting_description" value="quartz formatted cron expression for fleet sync scheduler (Seconds - Minutes - Hours - Day Of Month - Month - Day Of Week - Year)"/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="setting_module_id" valueComputed="(SELECT module_id FROM modules WHERE module_name='asset')"></column>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+        <rollback>
+            <delete tableName="settings">
+                <where>
+                    setting_key = 'asset.fleetsync.scheduler.cron.expression'
+                </where>
+            </delete>
+        </rollback>
     </changeSet>
 
 </databaseChangeLog>
