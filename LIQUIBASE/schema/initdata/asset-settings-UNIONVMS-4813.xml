@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet author="cpapatheodorou" id="UNIONVMS-4813-fleet-sync-wsdl-location-url">
+        <insert tableName="settings">
+            <column name="setting_id" valueSequenceNext="hibernate_sequence" />
+            <column name="setting_key" value="asset.fleetsync.wsdl.location.url"/>
+            <column name="setting_value" value="https://intragate.test.ec.europa.eu/mare-fleet-register-webservices/v1_0/VesselDataService"/>
+            <column name="global" value="0"/>
+            <column name="setting_description" value="Fleet sync wsdl location url"/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="setting_module_id" valueComputed="(SELECT module_id FROM modules WHERE module_name='asset')"></column>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+        <rollback>
+            <delete tableName="settings">
+                <where>
+                    setting_key = 'asset.fleetsync.wsdl.location.url'
+                </where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
