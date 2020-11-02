@@ -6,8 +6,7 @@
 	<include file="v0.1/db-changelog-createTables_0.1.xml" relativeToChangelogFile="true"/>
 	<include file="../schema/initdata/globalSettings.xml" relativeToChangelogFile="true"/>
 	<include file="../schema/initdata/subscriptionSettings.xml" relativeToChangelogFile="true"/>
+
+	<include file="3.4/db-changelog-UNIONVMS-4856.xml" relativeToChangelogFile="true"/>
 	<include file="3.4/db-changelog-UNIONVMS-MDR.xml" relativeToChangelogFile="true"/>
-
-	<include file="../schema/initdata/ruleSettings.xml" relativeToChangelogFile="true"/>
-
 </databaseChangeLog>
