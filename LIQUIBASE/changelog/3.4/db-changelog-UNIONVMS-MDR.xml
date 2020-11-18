@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet author="nomikosi" id="UNIONVMS-MDR">
+        <insert tableName="settings">
+            <column name="setting_id" valueSequenceNext="hibernate_sequence" />
+            <column name="setting_key" value="mdr.gateway.endpoint"/>
+            <column name="setting_value" value="http://localhost:8080/unionvms/mdr/internal/mdr-gateway"/>
+            <column name="global" value="0"/>
+            <column name="setting_description" value="Setting for the asset gateway endpoint"/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="setting_module_id" valueComputed="(SELECT module_id FROM modules WHERE module_name='activity')"></column>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+
+        <insert tableName="settings">
+            <column name="setting_id" valueSequenceNext="hibernate_sequence" />
+            <column name="setting_key" value="mdr.gateway.endpoint"/>
+            <column name="setting_value" value="http://localhost:8080/unionvms/mdr/internal/mdr-gateway"/>
+            <column name="global" value="0"/>
+            <column name="setting_description" value="Setting for the asset gateway endpoint"/>
+            <column name="setting_last_modified" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="setting_module_id" valueComputed="(SELECT module_id FROM modules WHERE module_name='rules')"></column>
+            <column name="updated_by" value="UVMS"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="settings">
+                <where>
+                    setting_key = 'mdr.gateway.endpoint'
+                </where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
