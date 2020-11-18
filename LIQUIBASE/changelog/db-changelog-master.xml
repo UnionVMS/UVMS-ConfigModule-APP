@@ -7,4 +7,6 @@
 	<include file="../schema/initdata/globalSettings.xml" relativeToChangelogFile="true"/>
 	<include file="../schema/initdata/subscriptionSettings.xml" relativeToChangelogFile="true"/>
 
+	<include file="v3.4/db-changelog-UNIONVMS-4856.xml" relativeToChangelogFile="true"/>
+	<include file="v3.4/db-changelog-UNIONVMS-4920.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
