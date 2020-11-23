@@ -65,10 +65,11 @@ public class ModuleRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(ModuleRequestMapper.createSettingEventMessage(setting, SettingEventType.RESET));
     }
 
-    public static String toPingRequest(String moduleName) throws ModelMarshallException {
+    public static String toPingRequest(String moduleName, String moduleVersion) throws ModelMarshallException {
         PingRequest request = new PingRequest();
         request.setMethod(ConfigModuleMethod.PING);
         request.setModuleName(moduleName);
+        request.setModuleVersion(moduleVersion);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 

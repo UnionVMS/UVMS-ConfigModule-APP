@@ -187,6 +187,40 @@ public class SettingsRestResource {
     }
 
     /**
+     * @summary Returns a catalog of modules along with their version.
+     * @return a map of module name with its version
+     */
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/module/all")
+    public ResponseDto getAllModuleVersions() {
+        try {
+            return new ResponseDto(serviceLayer.getAllModuleVersions(), ResponseCode.OK);
+        }
+        catch (ServiceException | NullPointerException ex) {
+            LOG.error("Error when getting modules catalog.", ex);
+            return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
+        }
+    }
+
+    /**
+     * @summary Returns the version of the requested module.
+     * @return the version of the
+     */
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/module/{module-name}")
+    public ResponseDto getModuleByName(@PathParam("module-name") String moduleName) {
+        try {
+            return new ResponseDto(serviceLayer.getModuleVersion(moduleName), ResponseCode.OK);
+        }
+        catch (NullPointerException ex) {
+            LOG.error("Error when getting module from catalog.", ex);
+            return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
+        }
+    }
+
+    /**
      * @summary Returns an object of module statuses (online and last ping).
      * @return object of module statuses
      */

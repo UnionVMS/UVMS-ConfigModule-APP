@@ -24,12 +24,14 @@ import eu.europa.ec.fisheries.uvms.config.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMapperException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.config.service.ConfigService;
+import eu.europa.ec.fisheries.uvms.config.service.DeployedModuleCatalog;
 import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +47,9 @@ public class ConfigServiceBean implements ConfigService {
     
     @EJB
     private ConfigDomainModel configModel;
+
+    @Inject
+    private DeployedModuleCatalog deployedModuleCatalog;
 
     @Override
     public SettingType create(SettingType setting, String moduleName, String username) throws ServiceException {
@@ -142,6 +147,23 @@ public class ConfigServiceBean implements ConfigService {
         catch (ConfigModelException e) {
             throw new ServiceException(" Error when getting settings catalog",e);
         }
+    }
+
+    @Override
+    public Map<String, Object> getAllModuleVersions() {
+        return deployedModuleCatalog.getDeployedModuleVersions();
+    }
+
+    @Override
+    public void updateModuleCatalog(String moduleName, String moduleVersion) {
+        deployedModuleCatalog.setModuleVersion(moduleName, moduleVersion);
+    }
+
+    @Override
+    public Map<String, String> getModuleVersion(String moduleName) {
+        Map<String, String> moduleInfo = new HashMap<>();
+        moduleInfo.put(moduleName, deployedModuleCatalog.getDeployedModuleVersion(moduleName));
+        return moduleInfo;
     }
 
     private Map<String, List<SettingType>> getCatalogFromSettingCatalogResponse(List<SettingsCatalogEntry> catalog) {

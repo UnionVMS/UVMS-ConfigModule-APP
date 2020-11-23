@@ -154,6 +154,7 @@
 						<xsd:extension base="module:ConfigModuleBaseRequest">
 							<xsd:sequence>
 								<xsd:element name="moduleName" type="xsd:string"/>
+								<xsd:element name="moduleVersion" type="xsd:string"/>
 							</xsd:sequence>
 						</xsd:extension>
 					</xsd:complexContent>
