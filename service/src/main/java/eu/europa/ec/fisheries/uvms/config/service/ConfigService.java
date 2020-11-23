@@ -96,8 +96,30 @@ public interface ConfigService {
     Map<String, List<SettingType>> getCatalog() throws ServiceException;
 
     /**
-     * Sets a new timestamp for the module. 
-     *  
+     * Get a catalog of all deployed modules.
+
+     * @return a mapping from module name to deployed version
+     * @throws ServiceException if unsuccessful
+     */
+    Map<String, Object> getAllModuleVersions() throws ServiceException;
+
+    /**
+     * Updates catalog with the given module and its version.
+     * @param moduleName the name of the module
+     * @param moduleVersion the version of the module
+     */
+    void updateModuleCatalog(String moduleName, String moduleVersion);
+
+    /**
+     * Get a modules version.
+     * @param moduleName the name of the module
+     * @return the version of the module
+     */
+    Map<String, String> getModuleVersion(String moduleName);
+
+    /**
+     * Sets a new timestamp for the module.
+     *
      * @param moduleName a module name
      * @param timestamp a timestamp
      */
@@ -113,5 +135,4 @@ public interface ConfigService {
      * @throws ServiceException
      */
     List<SettingType> getGlobalSettings() throws ServiceException;
-    
 }

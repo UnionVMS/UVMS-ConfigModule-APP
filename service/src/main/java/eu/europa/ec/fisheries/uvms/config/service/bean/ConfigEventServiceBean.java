@@ -41,6 +41,7 @@ import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class ConfigEventServiceBean implements EventService {
@@ -110,6 +111,7 @@ public class ConfigEventServiceBean implements EventService {
                 case PING:
                     PingRequest pingRequest = JAXBMarshaller.unmarshallTextMessage(jmsMessage, PingRequest.class);
                     configService.setModuleTimestamp(pingRequest.getModuleName(), new Date(jmsMessage.getJMSTimestamp()));
+                    configService.updateModuleCatalog(pingRequest.getModuleName(), Optional.ofNullable(pingRequest.getModuleVersion()).orElse("functionality_not_supported"));
                     LOG.info("[PING] Pinging module {}", pingRequest.getModuleName());
                     break;
                 case LIST:
