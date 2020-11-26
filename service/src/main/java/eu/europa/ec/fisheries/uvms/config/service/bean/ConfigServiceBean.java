@@ -29,6 +29,7 @@ import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -42,6 +43,9 @@ public class ConfigServiceBean implements ConfigService {
 
     final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
 
+    private static final String MODULE_NAME = "config";
+    private static final String MODULE_VERSION_PROPERTIES_KEY = "uvms.module.version";
+
     @EJB
     private ConfigMessageProducerBean producer;
     
@@ -50,6 +54,14 @@ public class ConfigServiceBean implements ConfigService {
 
     @Inject
     private DeployedModuleCatalog deployedModuleCatalog;
+
+    @Inject
+    private PropertiesBean propertiesBean;
+
+    @PostConstruct
+    void init() {
+        deployedModuleCatalog.setModuleVersion(MODULE_NAME, propertiesBean.getProperty(MODULE_VERSION_PROPERTIES_KEY));
+    }
 
     @Override
     public SettingType create(SettingType setting, String moduleName, String username) throws ServiceException {
