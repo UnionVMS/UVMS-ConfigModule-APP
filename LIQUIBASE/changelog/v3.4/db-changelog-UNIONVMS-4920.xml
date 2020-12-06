@@ -35,4 +35,17 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="UNIONVMS-4920-parameter" author="nikospara">
+        <insert tableName="parameter">
+            <column name="param_id" value="mdr.gateway.endpoint" />
+            <column name="param_description" value="mdr.gateway.endpoint" />
+            <column name="param_value" value="http://localhost:8080/unionvms/mdr/internal/mdr-gateway" />
+        </insert>
+
+        <rollback>
+            <delete tableName="parameter">
+                <where>param_id = 'mdr.gateway.endpoint'</where>
+            </delete>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>
