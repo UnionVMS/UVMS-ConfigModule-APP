@@ -22,9 +22,6 @@
     <mockito.version>1.10.16</mockito.version>
     <junit.version>4.12</junit.version>
     <swagger.version>1.3.1</swagger.version>
-    <sl4j.version>1.7.25</sl4j.version>
-    <logback.version>1.2.3</logback.version>
-    <logback.core.version>1.2.3</logback.core.version>
     <audit.model.version>4.0.10</audit.model.version>
     <javaee.version>8.0</javaee.version>
     <uvms.commons.version>${uvms.commonsLibrary.version}</uvms.commons.version>
