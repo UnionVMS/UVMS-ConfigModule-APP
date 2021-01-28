@@ -4,6 +4,8 @@
     
     <contextName>${application.name}</contextName>
 
+    <jmxConfigurator />
+
     <!-- FILE LOGGER -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <append>true</append>
