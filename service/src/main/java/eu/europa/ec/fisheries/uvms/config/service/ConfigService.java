@@ -113,5 +113,11 @@ public interface ConfigService {
      * @throws ServiceException
      */
     List<SettingType> getGlobalSettings() throws ServiceException;
-    
+
+
+    /**
+     * Match unmatched settings with modules 
+     *
+     */
+    List<SettingType> matchUnmatchedSettingsWithModule(String moduleName) throws ServiceException;
 }

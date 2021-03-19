@@ -192,4 +192,12 @@ public class ConfigServiceBean implements ConfigService {
         }
     }
 
+    @Override
+    public List<SettingType> matchUnmatchedSettingsWithModule(String moduleName) throws ServiceException {
+        try {
+            return configModel.matchUnmatchedSettingsWithModule(moduleName);
+        } catch (ConfigModelException e) {
+            throw new ServiceException("Error when getting unmatched settings.",e);
+        }
+    }
 }
