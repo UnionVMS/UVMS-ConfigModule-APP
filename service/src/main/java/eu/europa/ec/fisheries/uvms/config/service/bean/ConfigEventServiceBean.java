@@ -83,6 +83,7 @@ public class ConfigEventServiceBean implements EventService {
                     List<SettingType> localSettings = getLocalSettings(pushRequest.getSettings());
                     List<SettingType> createdSettings = configService.createAll(localSettings, pushRequest.getModuleName(), baseRequest.getUsername());
                     createdSettings.addAll(configService.getGlobalSettings());
+                    createdSettings.addAll(configService.matchUnmatchedSettingsWithModule(pushRequest.getModuleName()));
                     responseMessage = ModuleResponseMapper.toPushSettingsResponse(createdSettings);
                     configMessageProducer.sendResponseMessageToSender(jmsMessage, responseMessage);
                     LOG.info("[END] PushSettingsResponse sent back to module : [{}]", pushRequest.getModuleName());

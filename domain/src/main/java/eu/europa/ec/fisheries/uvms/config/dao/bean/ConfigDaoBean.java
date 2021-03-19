@@ -11,24 +11,21 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.dao.bean;
 
-import java.util.List;
-
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
-import eu.europa.ec.fisheries.uvms.config.dao.Dao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.transaction.Transactional;
+import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.config.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.config.dao.ConfigDao;
+import eu.europa.ec.fisheries.uvms.config.dao.Dao;
 import eu.europa.ec.fisheries.uvms.config.dao.exception.DaoException;
 import eu.europa.ec.fisheries.uvms.config.dao.exception.NoEntityFoundException;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Module;
 import eu.europa.ec.fisheries.uvms.config.entity.component.Setting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Stateless
 public class ConfigDaoBean extends Dao implements ConfigDao {
@@ -149,6 +146,27 @@ public class ConfigDaoBean extends Dao implements ConfigDao {
         } catch (Exception e) {
             LOG.error("[ Error when creating module. ] {}", e.getMessage());
             throw new DaoException("[ Error when creating module. ]", e);
+        }
+    }
+
+    @Override
+    public List<Setting> updateSettingsMissingModuleId(String moduleName) throws DaoException {
+        try{
+            Module module = getModuleByName(moduleName);
+
+            TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_FIND_BY_NAME_CONTAINING_MODULE, Setting.class);
+            query.setParameter("moduleName", module.getModuleName());
+            List<Setting> settings = query.getResultList();
+            for(Setting setting: settings) {
+                if(setting.getModule() == null) {
+                    setting.setModule(module);
+                }
+                updateSetting(setting);
+            }
+            return settings;
+        } catch (Exception e) {
+            LOG.error("[ Error when matching setting with module. ] {}", e.getMessage());
+            throw new DaoException(e.getMessage());
         }
     }
 
