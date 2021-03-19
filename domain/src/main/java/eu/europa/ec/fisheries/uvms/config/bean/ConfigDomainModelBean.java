@@ -170,10 +170,11 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
             if (module == null) {
                 return null;
             }
-
+            List<Setting> matchedSettings = dao.updateSettingsMissingModuleId(module.getModuleName());
             ArrayList<Setting> settings = new ArrayList<>();
             settings.addAll(module.getSettings());
             settings.addAll(dao.getGlobalSettings());
+            settings.addAll(matchedSettings);
             return mapper.toModel(settings);
         }
         catch (DaoException | DaoMappingException e) {
@@ -235,7 +236,6 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
             if (module == null) {
                 module = dao.createModule(moduleName);
             }
-
             return module;
         }
         catch (DaoException e) {
@@ -294,4 +294,14 @@ public class ConfigDomainModelBean implements ConfigDomainModel {
         }
     }
 
+    @Override
+    public List<SettingType> matchUnmatchedSettingsWithModule(String moduleName) throws ConfigModelException {
+        try {
+            List<Setting> matchedSettings = dao.updateSettingsMissingModuleId(moduleName);
+            return mapper.toModel(matchedSettings);
+        } catch (DaoException | DaoMappingException e) {
+            LOG.error("[ Error when matching unmatched settings. ] {}", e.getMessage());
+            throw new ConfigModelException("[ Error when matching unmatched settings. ]");
+        }
+    }
 }
