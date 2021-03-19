@@ -104,4 +104,10 @@ public interface ConfigDomainModel {
      */
     List<SettingType> getGlobalSettings() throws ConfigModelException;
 
+    /**
+     * Match unmatched settings with modules 
+     *
+     */
+    List<SettingType> matchUnmatchedSettingsWithModule(String moduleName) throws ConfigModelException;
+
 }

@@ -11,11 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.config.service;
 
+import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import javax.ejb.Local;
 
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.config.service.exception.ServiceException;
@@ -135,4 +134,11 @@ public interface ConfigService {
      * @throws ServiceException
      */
     List<SettingType> getGlobalSettings() throws ServiceException;
+
+
+    /**
+     * Match unmatched settings with modules 
+     *
+     */
+    List<SettingType> matchUnmatchedSettingsWithModule(String moduleName) throws ServiceException;
 }

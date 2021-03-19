@@ -25,7 +25,8 @@ import eu.europa.ec.fisheries.uvms.config.constant.UvmsConstants;
 @NamedQueries({
     @NamedQuery(name = UvmsConstants.SETTING_FIND_GLOBALS, query = "SELECT s FROM Setting s WHERE s.global = true"),
     @NamedQuery(name = UvmsConstants.SETTING_FIND_GLOBAL_BY_KEY, query = "SELECT s FROM Setting s WHERE s.global = true and s.key = :key"),
-    @NamedQuery(name = UvmsConstants.SETTING_FIND_BY_KEY_AND_MODULE, query = "SELECT s FROM Setting s WHERE s.key = :key and s.module.moduleName = :moduleName")
+    @NamedQuery(name = UvmsConstants.SETTING_FIND_BY_KEY_AND_MODULE, query = "SELECT s FROM Setting s WHERE s.key = :key and s.module.moduleName = :moduleName"),
+    @NamedQuery(name = UvmsConstants.SETTING_FIND_BY_NAME_CONTAINING_MODULE, query = "SELECT s FROM Setting s WHERE s.global = false AND s.key LIKE CONCAT(cast(:moduleName as string),'%')")
 })
 public class Setting implements Serializable {
 

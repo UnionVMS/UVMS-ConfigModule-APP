@@ -17,6 +17,7 @@ public class UvmsConstants {
     public static final String SETTING_FIND_GLOBALS = "Setting.findGlobals";
     public static final String SETTING_FIND_GLOBAL_BY_KEY = "Setting.findGlobalsByKey";
     public static final String SETTING_FIND_BY_KEY_AND_MODULE = "Setting.findByKey";
+    public static final String SETTING_FIND_BY_NAME_CONTAINING_MODULE = "Setting.findByNameContainingModule";
     public static final String MODULE_LIST_ALL = "Module.listNames";
     public static final String MODULE_FIND_BY_NAME = "Module.findByName";
 
