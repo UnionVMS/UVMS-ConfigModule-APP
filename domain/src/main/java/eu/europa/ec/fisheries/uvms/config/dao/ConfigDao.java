@@ -98,4 +98,12 @@ public interface ConfigDao {
      */
     public Module createModule(String moduleName) throws DaoException;
 
+    /**
+     * Match settings that miss module id with their respective module.
+     * 
+     * @param moduleName name of a module
+     * @throws DaoException
+     */
+    public List<Setting> updateSettingsMissingModuleId(String moduleName) throws DaoException;
+
 }
