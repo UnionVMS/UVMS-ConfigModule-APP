@@ -24,8 +24,7 @@
                         <ejbModule>
                             <groupId>${project.groupId}</groupId>   
                             <artifactId>config-dbaccess-domain</artifactId>
-                            <bundleFileName>config-dbaccess-domain.jar</bundleFileName>
-                        </ejbModule>                   
+                        </ejbModule>
                         <ejbModule>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>config-message</artifactId>
@@ -45,7 +44,7 @@
                         </webModule>
                     </modules>
                     <skinnyWars>true</skinnyWars>
-                    <defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
                 </configuration>
             </plugin>
         </plugins>
