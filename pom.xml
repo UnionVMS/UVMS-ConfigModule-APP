@@ -22,7 +22,7 @@
         <docker.dev.version>3.44.6</docker.dev.version>
 
         <fish.focus.parent.version>3.6</fish.focus.parent.version>
-        <usm4uvms.version>4.1.6</usm4uvms.version>
+        <usm4uvms.version>4.1.8</usm4uvms.version>
         <audit.model.version>4.3.8</audit.model.version>
         <uvms.common.version>4.1.9</uvms.common.version>
 
