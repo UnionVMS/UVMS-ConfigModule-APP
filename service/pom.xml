@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>config-service</artifactId>
@@ -17,15 +18,50 @@
         <application.name>${project.parent.artifactId}</application.name>
         <application.version>${project.parent.version}</application.version>
         <application.logfile>${project.parent.artifactId}.log</application.logfile>
-        <application.logfile.message.pattern>%replace(%rEx){'[\r\n]+', '~~'}%nopex %n</application.logfile.message.pattern>
+        <application.logfile.message.pattern>%replace(%rEx){'[\r\n]+', '~~'}%nopex %n
+        </application.logfile.message.pattern>
     </properties>
 
     <profiles>
         <profile>
-            <id>multilineLog</id>
-            <properties>
-                <application.logfile.message.pattern>%n</application.logfile.message.pattern>
-            </properties>
+            <id>logging-default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <filtering>true</filtering>
+                        <directory>src/main/logging/default</directory>
+                        <targetPath>${project.build.outputDirectory}</targetPath>
+                        <includes>
+                            <include>logback.xml</include>
+                        </includes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>logging-cloud</id>
+            <build>
+                <resources>
+                    <resource>
+                        <filtering>true</filtering>
+                        <directory>src/main/logging/cloud</directory>
+                        <targetPath>${project.build.outputDirectory}</targetPath>
+                        <includes>
+                            <include>logback.xml</include>
+                        </includes>
+                    </resource>
+                </resources>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.j256.cloudwatchlogbackappender</groupId>
+                    <artifactId>cloudwatchlogbackappender</artifactId>
+                    <version>2.0</version>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 
@@ -79,8 +115,11 @@
         </plugins>
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
             </resource>
         </resources>
     </build>
