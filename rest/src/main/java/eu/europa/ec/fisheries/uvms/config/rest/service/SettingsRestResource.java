@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.config.rest.service;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -30,6 +31,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import eu.europa.ec.fisheries.uvms.config.rest.dto.SettingsWithPermissionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -178,13 +180,26 @@ public class SettingsRestResource {
     @Path("/catalog")
     public ResponseDto catalog() {
         try {
-            return new ResponseDto(serviceLayer.getCatalog(), ResponseCode.OK);
+            Map<String, List<SettingType>> settingsMap = serviceLayer.getCatalog();
+            Map<String, SettingsWithPermissionDto> permissionsMap = this.createManagePermissionsMap(settingsMap);
+            return new ResponseDto(permissionsMap, ResponseCode.OK);
         }
         catch (ServiceException | NullPointerException ex) {
             LOG.error("Error when getting catalog.", ex);
             return new ResponseDto(ex.getMessage(), ResponseCode.ERROR);
         }
     }
+
+    private Map<String, SettingsWithPermissionDto> createManagePermissionsMap(Map<String, List<SettingType>> settingsMap) {
+        Map<String, SettingsWithPermissionDto> permissionsMap =
+            settingsMap.entrySet().stream()
+                .collect(Collectors.toMap(e->e.getKey(), e->new SettingsWithPermissionDto(Boolean.TRUE, e.getValue())));
+       boolean hasManageExchangeParametersPerm = request.isUserInRole(UnionVMSFeature.manageExchangeParameters.name());
+       List<SettingType> settings = permissionsMap.get("exchange").getSettings();
+       permissionsMap.put("exchange", new SettingsWithPermissionDto(hasManageExchangeParametersPerm, settings));
+       return permissionsMap;
+    }
+
 
     /**
      * @summary Returns a catalog of modules along with their version.
